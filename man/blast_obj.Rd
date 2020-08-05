@@ -4,7 +4,9 @@
 \name{blast_obj}
 \alias{blast_obj}
 \title{Retroviral vector integration site object}
-\format{GRange object}
+\format{
+GRange object
+}
 \usage{
 data(blast_obj)
 }

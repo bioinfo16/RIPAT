@@ -4,7 +4,9 @@
 \name{blast_gene}
 \alias{blast_gene}
 \title{Integration site annotation by gene data}
-\format{List object}
+\format{
+List object
+}
 \usage{
 data(blast_gene)
 }
