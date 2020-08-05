@@ -102,7 +102,7 @@ makeData = function(organism = 'GRCh37'){
   vtab = subset(vtab, vtab$Chromosome != 'MT')
   vtab1 = subset(vtab, vtab$ReviewStatus %in% c('reviewed by expert panel', 'criteria provided, multiple submitters, no conflicts'))
   message('- Save pathogenic variant data')
-  saveRDS(vtab, file = paste0(outPath, '/', organism, '_clinvar.rds'))
+  saveRDS(vtab1, file = paste0(outPath, '/', organism, '_clinvar.rds'))
   message('- OK!')
   message('----- Finish. (Time : ', date(), ')\n')
 }
