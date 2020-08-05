@@ -1,0 +1,12 @@
+citHeader("To cite package 'RIPAT' in publications use:")
+citEntry(
+	entry = "manual",
+	title = "RIPAT : Retroviral Integration Pattern Analysis Tool",
+	author = personList(as.person("Min-Jeong Baek"),
+	                    as.person("Kwang-il Lim"),
+	                    as.person("In-Geol Choi")),
+	year = "2020",
+	textVersion =
+         paste("Min-Jeong Baek, Kwang-il Lim and In-Geol Choi.",
+               "RIPAT (Retroviral Integration Pattern Analysis Tool): an R package for analyzing retroviral integration sites on human genome.",
+                "Seoul, Korea (2020)."))

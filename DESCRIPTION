@@ -1,0 +1,32 @@
+Package: RIPAT
+Title: Retroviral Integration Pattern Analysis Tool (RIPAT)
+Version: 0.99.7
+Authors@R: person("Min-Jeong", "Baek", email="mjbaek16@korea.ac.kr", role = c("aut", "cre"))
+Description: RIPAT is developed as an R package for retroviral integration sites annotation and 
+             distribution analysis. RIPAT needs local alignment results from BLAST and BLAT.
+             Specific input format is depicted in RIPAT manual. RIPAT provides RV integration pattern
+             analysis result as forms of R objects, excel file with multiple sheets and plots.
+biocViews: Annotation
+Depends: 
+    R (>= 4.0)
+Imports:
+    biomaRt (>= 2.38.0),
+    GenomicRanges (>= 1.34.0),
+    ggplot2 (>= 3.1.0),
+    grDevices (>= 3.5.3),
+    karyoploteR (>= 1.6.3),
+    openxlsx (>= 4.1.4),
+    plyr (>= 1.8.4),
+    RColorBrewer (>= 1.1-2),
+    regioneR (>= 1.12.0),
+    rtracklayer (>= 1.42.2),
+    stats (>= 3.5.3),
+    stringr (>= 1.3.1),
+    utils (>= 3.5.3)
+Suggests:
+    knitr (>= 1.28)
+VignetteBuilder: knitr
+License: Artistic-2.0
+URL: https://github.com/bioinfo16/RIPAT/
+Encoding: UTF-8
+RoxygenNote: 7.1.0
