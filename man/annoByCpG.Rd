@@ -45,6 +45,7 @@ Plus, users can do random distribution analysis by this function.
 }
 \examples{
 data(blast_obj)
+makeData(organism = 'GRCh37', dataType = 'cpg')
 blast_cpg = annoByCpG(hits = blast_obj, doRandom = FALSE, outFileName = 'blast_res')
 
           
