@@ -90,8 +90,10 @@ Other annotation function is working same with both cases.
 RIPAT provides the function that download genomic data files. When user enters target genome version to this function, all data are downloaded automatically.
     ``` {R results='hide', message=FALSE}
     library(RIPAT)
+    # Download gene data file
     makeData(organism = 'GRCh37', dataType = 'gene')
-    makeData(organism = 'GRCh37', dataType = 'cpg)
+    # Download CpG data file
+    makeData(organism = 'GRCh37', dataType = 'cpg')
     ```
 
 + makeInputObj  
