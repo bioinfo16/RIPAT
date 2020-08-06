@@ -86,13 +86,20 @@ This R package uses Ensembl database, UCSC genome database and NCBI ClinVar in s
 In this manual, Gene and CpG annotation is written as a example.  
 Other annotation function is working same with both cases.  
 
++ makeData
+RIPAT provides the function that download genomic data files. When user enters target genome version to this function, all data are downloaded automatically.
+    ``` {R results='hide', message=FALSE}
+    library(RIPAT)
+    makeData(organism = 'GRCh37', dataType = 'gene')
+    makeData(organism = 'GRCh37', dataType = 'cpg)
+    ```
+
 + makeInputObj  
 Annotation funcions in this package need specific format of inputs.
 So, this function converts raw local alignment result to R object with the avaliable format. 
 User can use BLAST(output format 6 in command line version) and BLAT output format specifically.
 
     ``` {R results='hide', message=FALSE}
-    library(RIPAT)
     blast_obj=makeInputObj(inFile='blast_result.txt',  
                            vectorPos='front',
                            mapTool='blast',  
@@ -157,6 +164,7 @@ Plus, user can do random distribution analysis by this function.
 
 1. With random integration site analysis
     ``` {R results='hide', message=FALSE}
+    gc(reset = TRUE)
     blast_cpg_10K=annoByCpG(hits=blast_obj, 
                             organism='GRCh37',  
                             interval=5000, 
