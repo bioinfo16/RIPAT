@@ -79,7 +79,7 @@ This R package uses Ensembl database, UCSC genome database and NCBI ClinVar in s
 # Input format
   RIPAT can do integration pattern analysis with local alignment tools such as BLAST and BLAT. Each of cases makes the tab-delimited result file. Specific format for RIPAT is depicted to the table below.  
 ``` {R echo=FALSE, fig.align='left'}
-    knitr::include_graphics('input_contents_table.png')
+    knitr::include_graphics('input_contents_table.PNG')
 ```
 
 # Functions
