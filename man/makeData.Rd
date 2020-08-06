@@ -19,7 +19,7 @@ well-known genomic databases easily. The data file location is extdata folder of
 }
 }
 \examples{
-#' 
+
 makeData(organism = 'GRCh37')
 
 }
