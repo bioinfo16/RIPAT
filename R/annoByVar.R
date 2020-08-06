@@ -29,6 +29,7 @@
 #' @return Return a result list that is made up of insertion and distribution result tables and GenomicRange object of ClinVar data.
 #' @examples
 #' data(blast_obj)
+#' makeData(organism = 'GRCh37', dataType = 'variant')
 #' blast_clivar = annoByVar(hits = blast_obj, doRandom = FALSE, outFileName = 'blast_res')
 #' 
 #'           
