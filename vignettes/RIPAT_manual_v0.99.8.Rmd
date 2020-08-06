@@ -92,8 +92,6 @@ RIPAT provides the function that download genomic data files. When user enters t
     library(RIPAT)
     # Download gene data file
     makeData(organism = 'GRCh37', dataType = 'gene')
-    # Download CpG data file
-    makeData(organism = 'GRCh37', dataType = 'cpg')
     ```
 
 + makeInputObj  
@@ -158,48 +156,7 @@ Plus, user can do random distribution analysis by this function.
 ``` {R echo=FALSE}
     knitr::include_graphics('A5_15856M_BLAST_norandom_distribution_tss_GRCh37.png')
 ```
-    
-+ annoByCpG  
-This function annotate the integration site by CpG site data from UCSC genome database.  
-User can get site information inserted within CpG sites and distribution from CpG coordinations.  
-Plus, user can do random distribution analysis by this function.  
-
-1. With random integration site analysis
-    ``` {R results='hide', message=FALSE}
-    gc(reset = TRUE)
-    blast_cpg_10K=annoByCpG(hits=blast_obj, 
-                            organism='GRCh37',  
-                            interval=5000, 
-                            range=c(-20000, 20000),  
-                            doRandom=TRUE, 
-                            randomSize=10000,  
-                            includeUndecided=FALSE,  
-                            outPath='.',  
-                            outFileName='A5_15856M_BLAST_10K')
-    ```
-
-**[ Integration site distribution from CpG site ]**  
-``` {R echo=FALSE}
-    knitr::include_graphics('A5_15856M_BLAST_10K_distribution_CpG_GRCh37.png')
-```
-    
-2. Without random integration site analysis
-    ``` {R results='hide', message=FALSE}
-    blast_cpg_norandom=annoByCpG(hits=blast_obj, 
-                                 organism='GRCh37',  
-                                 interval=5000, 
-                                 range=c(-20000, 20000),  
-                                 doRandom=FALSE,  
-                                 includeUndecided=FALSE,  
-                                 outPath='.',  
-                                 outFileName='A5_15856M_BLAST_norandom')  
-    ```
-
-**[ Integration site distribution from CpG site ]**  
-``` {R echo=FALSE}
-    knitr::include_graphics('A5_15856M_BLAST_norandom_distribution_CpG_GRCh37.png')
-```
-
+  
 + drawingKaryo  
 To see the retroviral vector integration site at glance, we procide the karyoplot with integration mark.
     ``` {R results='hide', message=FALSE}
@@ -218,16 +175,11 @@ To see the retroviral vector integration site at glance, we procide the karyoplo
                                  includeUndecided=FALSE,
                                  outPath=getwd(),
                                  outFileName='A5_15856M_BLAST_karyo_cpg')
-    ```
+    ```  
     
 **[ Integration sites marked with genes ]**  
 ``` {R echo=FALSE}
     knitr::include_graphics('Ideogram_A5_15856M_BLAST_karyo_gene_GRCh37_decided.png')
-```
-    
-**[ Integration sites marked with CpGs ]**  
-``` {R echo=FALSE}
-    knitr::include_graphics('Ideogram_A5_15856M_BLAST_karyo_cpg_GRCh37_decided.png')
 ```
     
 + makeDocument  
@@ -258,8 +210,7 @@ In p-value plot, full-colored circle means significant difference between exprim
 ``` {R echo=FALSE}
     knitr::include_graphics('A5_15856M_BLAST_10K_pvalue_plot.png')
 ```
-    
-    
+
 # Session information
 Example codes in this vignette was run under the following conditions:
 ```
