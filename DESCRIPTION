@@ -1,6 +1,6 @@
 Package: RIPAT
 Title: Retroviral Integration Pattern Analysis Tool (RIPAT)
-Version: 0.99.8
+Version: 0.99.7
 Authors@R: person("Min-Jeong", "Baek", email="mjbaek16@korea.ac.kr", role = c("aut", "cre"))
 Description: RIPAT is developed as an R package for retroviral integration sites annotation and 
              distribution analysis. RIPAT needs local alignment results from BLAST and BLAT.
