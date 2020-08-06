@@ -83,8 +83,8 @@ This R package uses Ensembl database, UCSC genome database and NCBI ClinVar in s
 ```
 
 # Functions
-In this manual, Gene and CpG annotation is written as a example.  
-Other annotation function is working same with both cases.  
+In this manual, Gene annotation is written as a example.  
+Other annotation functions are working as a example case.  
 
 + makeData
 RIPAT provides the function that download genomic data files. When user enters target genome version to this function, all data are downloaded automatically.
@@ -167,14 +167,6 @@ To see the retroviral vector integration site at glance, we procide the karyoplo
                                   includeUndecided=FALSE,  
                                   outPath=getwd(),  
                                   outFileName='A5_15856M_BLAST_karyo_gene')  
-    
-    ## Karyogram marked CpG sites
-    karyo_obj_cpg = drawingKaryo(hits=blast_obj,
-                                 organism="GRCh37",
-                                 feature=blast_cpg_10K$CpG_data,
-                                 includeUndecided=FALSE,
-                                 outPath=getwd(),
-                                 outFileName='A5_15856M_BLAST_karyo_cpg')
     ```  
     
 **[ Integration sites marked with genes ]**  
