@@ -14,7 +14,10 @@
 #' 
 #' @examples 
 #'
-#' makeData(organism = 'GRCh37')
+#' makeData(organism = 'GRCh37', dataType = 'gene')
+#' makeData(organism = 'GRCh37', dataType = 'cpg')
+#' makeData(organism = 'GRCh37', dataType = 'repeat')
+#' makeData(organism = 'GRCh37', dataType = 'variant')
 #' 
 #' @export
 makeData = function(organism = 'GRCh37', dataType = 'gene'){
