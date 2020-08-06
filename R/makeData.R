@@ -13,7 +13,7 @@
 #' @param dataType a single character. Data type what user needs (gene, cpg, repeat and variant). Default is 'gene'.
 #' 
 #' @examples 
-#'#' 
+#'
 #' makeData(organism = 'GRCh37')
 #' 
 #' @export
