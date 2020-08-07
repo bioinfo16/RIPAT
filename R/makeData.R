@@ -109,6 +109,7 @@ makeData = function(organism = 'GRCh37', dataType = 'gene'){
     vtab = subset(vtab_raw, vtab_raw$Assembly == organism)
     vtab = subset(vtab, vtab$Chromosome != 'MT')
     vtab1 = subset(vtab, vtab$ReviewStatus %in% c('reviewed by expert panel', 'criteria provided, multiple submitters, no conflicts'))
+    vtab1$Chromosome = paste0('chr', vtab1$Chromosome)
     message('- Save clinical variant data')
     saveRDS(vtab1, file = paste0(outPath, '/', organism, '_clinvar.rds'))
     message('- OK!')
