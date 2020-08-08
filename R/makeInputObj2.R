@@ -24,7 +24,7 @@
 #' @return Return integration site objects in two types by a list. Data table format object and GenomicRange(GR) format object.
 #' @examples 
 #' 
-#' blast_obj = makeInputObj2(inDir = paste0(.libPath()[1], '/RIPAT/scripts'), id = 'BLASTn')
+#' blast_obj = makeInputObj2(inDir = system.file("scripts", package = "RIPAT"), id = 'BLASTn')
 #' 
 #'  
 #' @export
