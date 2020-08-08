@@ -44,8 +44,9 @@ Plus, users can do random distribution analysis by this function.
 }
 }
 \examples{
-data(blast_obj)
-makeData(organism = 'GRCh37', dataType = 'cpg')
+data(blast_obj); data(cpg_exam_db)
+saveRDS(cpg_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_cpg.rds'))
+
 blast_cpg = annoByCpG(hits = blast_obj, doRandom = FALSE, outFileName = 'blast_res')
 
           

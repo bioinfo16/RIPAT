@@ -44,8 +44,10 @@ Plus, users can do random distribution analysis by this function.
 }
 }
 \examples{
-data(blast_obj)
-makeData(organism = 'GRCh37', dataType = 'repeat')
+data(blast_obj); data(repeat_exam_db); data(micro_exam_db)
+saveRDS(repeat_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_repeat.rds'))
+saveRDS(micro_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_microsat.rds'))
+
 blast_repeat = annoByRepeat(hits = blast_obj, doRandom = FALSE, outFileName = 'blast_res')
 
           
