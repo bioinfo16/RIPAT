@@ -36,7 +36,7 @@ Specifically, User can use BLAST and BLAT output format.
 }
 \examples{
 
-blast_obj = makeInputObj2(inDir = paste0(.libPath()[1], '/RIPAT/scripts'), id = 'BLASTn')
+blast_obj = makeInputObj2(inDir = system.file("scripts", package = "RIPAT"), id = 'BLASTn')
 
  
 }
