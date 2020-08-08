@@ -105,7 +105,7 @@ makeData = function(organism = 'GRCh37', dataType = 'gene'){
     message('- Load NCBI Clinvar data')
     utils::download.file(url = "http://ftp.ncbi.nlm.nih.gov/pub/clinvar/tab_delimited/variant_summary.txt.gz",
                          destfile = paste0(outPath, '/variant_summary.txt.gz'))
-    vtab_raw = read.delim(gzfile(paste0(outPath, '/variant_summary.txt.gz')), header = TRUE, stringsAsFactors = FALSE)
+    vtab_raw = utils::read.delim(gzfile(paste0(outPath, '/variant_summary.txt.gz')), header = TRUE, stringsAsFactors = FALSE)
     vtab = subset(vtab_raw, vtab_raw$Assembly == organism)
     vtab = subset(vtab, vtab$Chromosome != 'MT')
     vtab1 = subset(vtab, vtab$ReviewStatus %in% c('reviewed by expert panel', 'criteria provided, multiple submitters, no conflicts'))
