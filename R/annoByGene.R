@@ -28,7 +28,10 @@
 #' 
 #' @return Return a result list that is made up of insertion and distribution result tables and GenomicRange object of Gene and TSS data.
 #' @examples 
-#' data(blast_obj)
+#' data(blast_obj); data(gene_exam_db); data(tss_exam_db)
+#' saveRDS(gene_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_gene.rds'))
+#' saveRDS(tss_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_TSS.rds'))
+#'
 #' blast_gene = annoByGene(hits = blast_obj, doRandom = FALSE, outFileName = 'blast_res')
 #' 
 #'

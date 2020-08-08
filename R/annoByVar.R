@@ -28,8 +28,9 @@
 #' 
 #' @return Return a result list that is made up of insertion and distribution result tables and GenomicRange object of ClinVar data.
 #' @examples
-#' data(blast_obj)
-#' makeData(organism = 'GRCh37', dataType = 'variant')
+#' data(blast_obj); data(var_exam_db)
+#' saveRDS(var_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_clinvar.rds'))
+#'
 #' blast_clivar = annoByVar(hits = blast_obj, doRandom = FALSE, outFileName = 'blast_res')
 #' 
 #'           
