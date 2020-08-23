@@ -1,39 +1,43 @@
-#' @title Annotate the vector integration site by CpG site data.
+#' @title Annotate integration sites by CpG sites.
 #' 
-#' @description \preformatted{
-#' This function uses CpG site data to search the feature of integration regions.
-#' User can get query sequence inserted in CpG sites and distribution from CpG coordinations.
-#' Plus, users can do random distribution analysis by this function.
-#' }
-#' 
+#' @description
+#' Annotate vector integration sites by CpG site data.
+#'  
 #' @usage 
 #' annoByCpG(hits, mapTool = 'blast', organism = 'GRCh37', interval = 5000, 
-#'           range = c(-20000, 20000), doRandom = TRUE, randomSize = if(doRandom){10000}else{NULL}, 
+#'           range = c(-20000, 20000), doRandom = TRUE,
+#'           randomSize = if(doRandom){10000}else{NULL}, 
 #'           includeUndecided = FALSE, outPath = getwd(),
 #'           outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 #' 
 #' @param hits a GR object. This object made by \code{makeInputObj} function.
-#' @param mapTool a single character. Function serves two types of object such as outputs from BLAST and BLAT.
+#' @param mapTool a single character. Function serves two types of object
+#'                such as outputs from BLAST and BLAT.
 #'                Default is 'blast'. If you want to use BLAT result, use 'blat'.
-#' @param organism a single character. This function can run by 2 versions of organisms such as GRCh37, GRCh38 (Human). Default is 'GRCh37'.
-#' @param interval an integer vector. This number means interval number for distribution analysis. Default is 5000.
-#' @param range an integer array. It means the range for highlight region of this analysis. Default range is c(-20000, 20000).
-#' @param doRandom TRUE or FALSE. If user types TRUE, random set is generated and do random distribution analysis.
-#'                 If this value is FALSE, random distribution analysis is not executed. Default is TRUE.
+#' @param organism a single character. This function can run by two versions of organisms
+#'                 such as GRCh37, GRCh38 (Human). Default is 'GRCh37'.
+#' @param interval an integer vector. This number means interval number for
+#'                 distribution analysis. Default is 5000.
+#' @param range an integer array. The range of highlight region for analysis.
+#'              Default range is c(-20000, 20000).
+#' @param doRandom TRUE or FALSE. If user types TRUE, random set is generated
+#'                 and user can do random distribution analysis. Default is TRUE.
+#'                 If this value is FALSE, random distribution analysis is not executed.
 #' @param randomSize an integer vector. A random set size. Default is 10000.
-#' @param includeUndecided TRUE or FALSE. If user want to use undecided hits in analysis, enter TRUE.
-#'                         Default is FALSE.
+#' @param includeUndecided TRUE or FALSE. If user want to use undecided hits in analysis,
+#'                         enter TRUE. Default is FALSE.
 #' @param outPath an string vector. Plots are saved in this path. Default value is R home directory.
 #' @param outFileName a character vector. Attached ID to the result file name.
 #' 
-#' @return Return a result list that is made up of insertion and distribution result tables and GenomicRange object of CpG site data.
+#' @return Return a result list that is made up of insertion and distribution result tables
+#'         and GenomicRange object of CpG data.
+#'         
 #' @examples 
 #' data(blast_obj); data(cpg_exam_db)
 #' saveRDS(cpg_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_cpg.rds'))
 #' 
 #' blast_cpg = annoByCpG(hits = blast_obj, doRandom = FALSE, outFileName = 'blast_res')
-#' 
-#'           
+#'            
 #' @export
 annoByCpG = function(hits, mapTool = 'blast', organism = 'GRCh37', interval = 5000, range = c(-20000, 20000), doRandom = TRUE, randomSize = if(doRandom){10000}else{NULL}, includeUndecided = FALSE, outPath = getwd(), outFileName = paste0('RIPAT', round(unclass(Sys.time())))){
   message('----- Annotate integration sites. (Time : ', date(), ')')

@@ -1,8 +1,7 @@
 #' @title Data file for annoByVar vignette
 #' 
-#' @description \preformatted{
-#' Data used in example code of \code{annoByVar}.
-#' }
+#' @description
+#' Data used in example code of \code{annoByVar}
 #' 
 #' @docType data
 #' @usage 

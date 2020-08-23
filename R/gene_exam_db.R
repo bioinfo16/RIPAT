@@ -1,8 +1,7 @@
 #' @title Data file for annoByGene vignette
 #' 
-#' @description \preformatted{
-#' Data used in example code of \code{annoByGene}.
-#' }
+#' @description
+#' Data used in example code of \code{annoByGene}
 #' 
 #' @docType data
 #' @usage 

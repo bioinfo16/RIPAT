@@ -1,19 +1,19 @@
-#' @title Drawing the karyogram with integration sites.
+#' @title Draw the karyogram plot.
 #' 
-#' @description \preformatted{
-#' This function draw an ideogram with the integration site data.
-#' }
+#' @description
+#' Draw a karyogram plot and show integration site.
 #' 
 #' @usage 
-#' drawingKaryo(hits, feature, organism = 'GRCh37', includeUndecided = FALSE, outPath = getwd(), 
+#' drawingKaryo(hits, feature, organism = 'GRCh37',
+#'              includeUndecided = FALSE, outPath = getwd(), 
 #'              outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 #' 
 #' @param hits a GR object. This object made from \code{makeInputObj} function.
 #' @param feature a GR object. This object made from annotation function. 
-#' @param organism a character vector. This function serves 2 versions of organisms such as GRCh37, GRCh38 (Human).
-#'                 Default is 'GRCh37'.
-#' @param includeUndecided TRUE or FALSE. If user want to use undecided hits in analysis, enter TRUE.
-#'                         Default is FALSE.
+#' @param organism a character vector. This function serves 2 versions of organisms
+#'                 such as GRCh37, GRCh38 (Human). Default is 'GRCh37'.
+#' @param includeUndecided TRUE or FALSE. If user want to use undecided hits in analysis,
+#'                         enter TRUE. Default is FALSE.
 #' @param outPath a string vector. Type path to save a plot.
 #' @param outFileName a character vector. This value used when saving the idegoram image file.
 #' 
@@ -24,7 +24,6 @@
 #' data(blast_gene)
 #' drawingKaryo(hits = blast_obj, feature = blast_gene$Gene_data, outFileName = 'blast_res')
 #' 
-#'           
 #' @export
 drawingKaryo = function(hits, feature, organism = 'GRCh37', includeUndecided = FALSE, outPath = getwd(), outFileName = paste0('RIPAT', round(unclass(Sys.time())))){
   message('----- Draw an ideogram. (Time : ', date(), ')')

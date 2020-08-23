@@ -1,8 +1,7 @@
 #' @title Data file for annoByCpG vignette
 #' 
-#' @description \preformatted{
-#' Data used in example code of \code{annoByCpG}.
-#' }
+#' @description
+#' Data used in example code of \code{annoByCpG}
 #' 
 #' @docType data
 #' @usage 

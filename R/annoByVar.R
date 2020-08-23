@@ -1,39 +1,43 @@
-#' @title Annotate the vector integration site by NCBI ClinVar data.
+#' @title Annotate integration sites by clinical variants.
 #' 
-#' @description \preformatted{
-#' This function uses NCBI ClinVar data to search the feature of integration regions.
-#' User can get query sequence inserted in pathogenic variants and distribution from variant coordinations.
-#' Plus, users can do random distribution analysis by this function.
-#' }
+#' @description
+#' Annotate vector integration sites by clinical variant data.
 #' 
 #' @usage 
 #' annoByVar(hits, mapTool = 'blast', organism = 'GRCh37', interval = 5000, 
-#'           range = c(-20000, 20000), doRandom = TRUE, randomSize = if(doRandom){10000}else{NULL}, 
+#'           range = c(-20000, 20000), doRandom = TRUE,
+#'           randomSize = if(doRandom){10000}else{NULL}, 
 #'           includeUndecided = FALSE, outPath = getwd(),
 #'           outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 #' 
 #' @param hits a GR object. This object made by \code{makeInputObj} function.
-#' @param mapTool a single character. Function serves two types of object such as outputs from BLAST and BLAT.
+#' @param mapTool a single character. Function serves two types of object
+#'                such as outputs from BLAST and BLAT.
 #'                Default is 'blast'. If you want to use BLAT result, use 'blat'.
-#' @param organism a single character. This function can run by 2 versions of organisms such as GRCh37, GRCh38 (Human). Default is 'GRCh37'.
-#' @param interval an integer vector. This number means interval number for distribution analysis. Default is 5000.
-#' @param range an integer array. It means the range for highlight region of this analysis. Default range is c(-20000, 20000).
-#' @param doRandom TRUE or FALSE. If user types TRUE, random set is generated and do random distribution analysis.
-#'                 If this value is FALSE, random distribution analysis is not executed. Default is TRUE.
+#' @param organism a single character. This function can run by two versions of organisms
+#'                 such as GRCh37, GRCh38 (Human). Default is 'GRCh37'.
+#' @param interval an integer vector. This number means interval number for
+#'                 distribution analysis. Default is 5000.
+#' @param range an integer array. The range of highlight region for analysis.
+#'              Default range is c(-20000, 20000).
+#' @param doRandom TRUE or FALSE. If user types TRUE, random set is generated
+#'                 and user can do random distribution analysis. Default is TRUE.
+#'                 If this value is FALSE, random distribution analysis is not executed.
 #' @param randomSize an integer vector. A random set size. Default is 10000.
-#' @param includeUndecided TRUE or FALSE. If user want to use undecided hits in analysis, enter TRUE.
-#'                         Default is FALSE.
+#' @param includeUndecided TRUE or FALSE. If user want to use undecided hits in analysis,
+#'                         enter TRUE. Default is FALSE.
 #' @param outPath an string vector. Plots are saved in this path. Default value is R home directory.
 #' @param outFileName a character vector. Attached ID to the result file name.
 #' 
-#' @return Return a result list that is made up of insertion and distribution result tables and GenomicRange object of ClinVar data.
+#' @return Return a result list that is made up of insertion and distribution result tables
+#'         and GenomicRange object of clinical variant data.
+#'         
 #' @examples
 #' data(blast_obj); data(var_exam_db)
 #' saveRDS(var_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_clinvar.rds'))
 #'
 #' blast_clivar = annoByVar(hits = blast_obj, doRandom = FALSE, outFileName = 'blast_res')
 #' 
-#'           
 #' @export
 annoByVar = function(hits, mapTool = 'blast', organism = 'GRCh37', interval = 5000, range = c(-20000, 20000), doRandom = TRUE, randomSize = if(doRandom){10000}else{NULL}, includeUndecided = FALSE, outPath = getwd(), outFileName = paste0('RIPAT', round(unclass(Sys.time())))){
   message('----- Annotate integration sites. (Time : ', date(), ')')
@@ -162,7 +166,7 @@ annoByVar = function(hits, mapTool = 'blast', organism = 'GRCh37', interval = 50
   }
   grDevices::png(paste0(outPath, '/', outFileName, '_distribution_var_', organism, '.png'), width = 1200, height = 750)
   cl_plot = ggplot2::ggplot(count_data) + ggplot2::geom_bar(ggplot2::aes(x = Range, y = Freq, fill = Group), stat = "identity", position = "dodge", width = 0.5) +
-    ggplot2::lims(y = c(0, max(count_data$Freq)*1.5)) + ggplot2::ggtitle(label = "Random distribution (Pathogenic variant)") +
+    ggplot2::lims(y = c(0, max(count_data$Freq)*1.5)) + ggplot2::ggtitle(label = "Random distribution (Clinical variant)") +
     ggplot2::xlab('Intervals (Kbs)') + ggplot2::ylab("Ratio of Integration Events") + ggplot2::scale_fill_manual(values = c('mediumspringgreen', 'mediumpurple')) +
     ggplot2::theme(panel.background = ggplot2::element_rect(fill="white", colour = "white"),
                    panel.grid.major = ggplot2::element_line(size = 0.5, linetype = 'dotted', colour = 'black'),

@@ -1,32 +1,37 @@
-#' @title Annotate the vector integration site by repeat sequence data.
+#' @title Annotate integration sites by repeats and microsatellites.
 #' 
-#' @description \preformatted{
-#' This function uses repeat sequence data to search the feature of integration regions.
-#' User can get query sequence inserted in repeat sites and distribution from repeat coordinations.
-#' Plus, users can do random distribution analysis by this function.
-#' }
+#' @description
+#' Annotate vector integration sites by repeat and microsatellite data.
 #' 
 #' @usage 
 #' annoByRepeat(hits, mapTool = 'blast', organism = 'GRCh37', interval = 5000, 
-#'              range = c(-20000, 20000), doRandom = TRUE, randomSize = if(doRandom){10000}else{NULL}, 
+#'              range = c(-20000, 20000), doRandom = TRUE,
+#'              randomSize = if(doRandom){10000}else{NULL}, 
 #'              includeUndecided = FALSE, outPath = getwd(),
 #'              outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 #' 
 #' @param hits a GR object. This object made by \code{makeInputObj} function.
-#' @param mapTool a single character. Function serves two types of object such as outputs from BLAST and BLAT.
+#' @param mapTool a single character. Function serves two types of object
+#'                such as outputs from BLAST and BLAT.
 #'                Default is 'blast'. If you want to use BLAT result, use 'blat'.
-#' @param organism a single character. This function can run by 2 versions of organisms such as GRCh37, GRCh38 (Human). Default is 'GRCh37'.
-#' @param interval an integer vector. This number means interval number for distribution analysis. Default is 5000.
-#' @param range an integer array. It means the range for highlight region of this analysis. Default range is c(-20000, 20000).
-#' @param doRandom TRUE or FALSE. If user types TRUE, random set is generated and do random distribution analysis.
-#'                 If this value is FALSE, random distribution analysis is not executed. Default is TRUE.
+#' @param organism a single character. This function can run by two versions of organisms
+#'                 such as GRCh37, GRCh38 (Human). Default is 'GRCh37'.
+#' @param interval an integer vector. This number means interval number for
+#'                 distribution analysis. Default is 5000.
+#' @param range an integer array. The range of highlight region for analysis.
+#'              Default range is c(-20000, 20000).
+#' @param doRandom TRUE or FALSE. If user types TRUE, random set is generated
+#'                 and user can do random distribution analysis. Default is TRUE.
+#'                 If this value is FALSE, random distribution analysis is not executed.
 #' @param randomSize an integer vector. A random set size. Default is 10000.
-#' @param includeUndecided TRUE or FALSE. If user want to use undecided hits in analysis, enter TRUE.
-#'                         Default is FALSE.
+#' @param includeUndecided TRUE or FALSE. If user want to use undecided hits in analysis,
+#'                         enter TRUE. Default is FALSE.
 #' @param outPath an string vector. Plots are saved in this path. Default value is R home directory.
 #' @param outFileName a character vector. Attached ID to the result file name.
 #' 
-#' @return Return a result list that is made up of insertion and distribution result tables and GenomicRange object of Repeat data.
+#' @return Return a result list that is made up of insertion and distribution result tables
+#'         and GenomicRange object of Rpeat and microsatellite data.
+#'         
 #' @examples 
 #' data(blast_obj); data(repeat_exam_db); data(micro_exam_db)
 #' saveRDS(repeat_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_repeat.rds'))
@@ -34,7 +39,6 @@
 #' 
 #' blast_repeat = annoByRepeat(hits = blast_obj, doRandom = FALSE, outFileName = 'blast_res')
 #' 
-#'           
 #' @export
 annoByRepeat = function(hits, mapTool = 'blast', organism = 'GRCh37', interval = 5000, range = c(-20000, 20000), doRandom = TRUE, randomSize = if(doRandom){10000}else{NULL}, includeUndecided = FALSE, outPath = getwd(), outFileName = paste0('RIPAT', round(unclass(Sys.time())))){
   message('----- Annotate integration sites. (Time : ', date(), ')')
@@ -64,22 +68,22 @@ annoByRepeat = function(hits, mapTool = 'blast', organism = 'GRCh37', interval =
   only_res_que = data.frame(hits[[1]][inside_repeat_only$queryHits,], stringsAsFactors = FALSE)[,c(1:3,6:8)]
   only_res_sub = dataTable[inside_repeat_only$subjectHits,]
   only_res_que_m = data.frame(hits[[1]][inside_micro_only$queryHits,], stringsAsFactors = FALSE)[,c(1:3,6:8)]
-  only_res_sub_m = dataTable[inside_micro_only$subjectHits,]
+  only_res_sub_m = dataTable_micro[inside_micro_only$subjectHits,]
   inside_tab_only = unique(cbind(only_res_que, only_res_sub)[,c(4,1:3,5,6,11,7:10,12,13)])
-  inside_tab_only_m = unique(cbind(only_res_que_m, only_res_sub_m)[,c(4,1:3,5,6,11,7:10,12,13)])
+  inside_tab_only_m = unique(cbind(only_res_que_m, only_res_sub_m)[,c(4,1:3,5,6,7:10)])
   names(inside_tab_only) = c('q_name', 'q_chr', 'q_start', 'q_end', 'identity', 'align_length', 'rep_name', 'chr', 'start', 'end', 'strand', 'repClass', 'repFamily')
-  names(inside_tab_only_m) = c('q_name', 'q_chr', 'q_start', 'q_end', 'identity', 'align_length', 'rep_name', 'chr', 'start', 'end', 'strand', 'repClass', 'repFamily')
+  names(inside_tab_only_m) = c('q_name', 'q_chr', 'q_start', 'q_end', 'identity', 'align_length', 'chr', 'start', 'end', 'microName')
   if(length(hits[[2]]) != 0){
     inside_repeat_dup = as.data.frame(GenomicRanges::findOverlaps(hits[[2]], gr_repeat, type = 'any', ignore.strand = TRUE), stringsAsFactors = FALSE)
     inside_micro_dup = as.data.frame(GenomicRanges::findOverlaps(hits[[2]], gr_micro, type = 'any', ignore.strand = TRUE), stringsAsFactors = FALSE)
     dup_res_que = data.frame(hits[[2]][inside_repeat_dup$queryHits,], stringsAsFactors = FALSE)[,c(1:3,6:8)]
     dup_res_sub = dataTable[inside_repeat_dup$subjectHits,]
     dup_res_que_m = data.frame(hits[[2]][inside_micro_dup$queryHits,], stringsAsFactors = FALSE)[,c(1:3,6:8)]
-    dup_res_sub_m = dataTable[inside_micro_dup$subjectHits,]
+    dup_res_sub_m = dataTable_micro[inside_micro_dup$subjectHits,]
     inside_tab_dup = unique(cbind(dup_res_que, dup_res_sub)[,c(4,1:3,5,6,11,7:10,12:13)])
     inside_tab_dup_m = unique(cbind(dup_res_que_m, dup_res_sub_m)[,c(4,1:3,5,6,11,7:10,12,13)])
     names(inside_tab_dup) = c('q_name', 'q_chr', 'q_start', 'q_end', 'identity', 'align_length', 'rep_name', 'chr', 'start', 'end', 'strand', 'repClass', 'repFamily')
-    names(inside_tab_dup_m) = c('q_name', 'q_chr', 'q_start', 'q_end', 'identity', 'align_length', 'rep_name', 'chr', 'start', 'end', 'strand', 'repClass', 'repFamily')
+    names(inside_tab_dup_m) = c('q_name', 'q_chr', 'q_start', 'q_end', 'identity', 'align_length', 'chr', 'start', 'end', 'microName')
   } else {inside_tab_dup = NULL}
   message('- OK!')
   message('- Calculate distance.')
@@ -97,7 +101,7 @@ annoByRepeat = function(hits, mapTool = 'blast', organism = 'GRCh37', interval =
     cal1m = dataTable_micro$start-x; cal2m = dataTable_micro$end-x
     cal1_im = intersect(which(cal1m <= abs(range[1])), which(cal1m > 0))
     cal2_im = intersect(which(abs(cal2m) <= range[2]), which(cal2m < 0))
-    dat_m = data.frame(dataTable[c(cal1_im, cal2_im),], dist = -c(cal1m[cal1_im], cal2m[cal2_im]))
+    dat_m = data.frame(dataTable_micro[c(cal1_im, cal2_im),], dist = -c(cal1m[cal1_im], cal2m[cal2_im]))
     dat_m = unique(data.frame('query' = rep(y, nrow(dat_m)), dat_m))
     dat_m = dat_m[which(dat_m$chr == z),]
     dat_m = dat_m[order(abs(dat_m$dist), decreasing = FALSE),][1,]
@@ -119,7 +123,7 @@ annoByRepeat = function(hits, mapTool = 'blast', organism = 'GRCh37', interval =
       cal1m = dataTable_micro$start-x; cal2m = dataTable_micro$end-x
       cal1_im = intersect(which(cal1m <= abs(range[1])), which(cal1m > 0))
       cal2_im = intersect(which(abs(cal2m) <= range[2]), which(cal2m < 0))
-      dat_m = data.frame(dataTable[c(cal1_im, cal2_im),], dist = -c(cal1m[cal1_im], cal2m[cal2_im]))
+      dat_m = data.frame(dataTable_micro[c(cal1_im, cal2_im),], dist = -c(cal1m[cal1_im], cal2m[cal2_im]))
       dat_m = unique(data.frame('query' = rep(y, nrow(dat_m)), dat_m))
       dat_m = dat_m[which(dat_m$chr == z),]
       dat_m = dat_m[order(abs(dat_m$dist), decreasing = FALSE),][1,]
@@ -171,7 +175,7 @@ annoByRepeat = function(hits, mapTool = 'blast', organism = 'GRCh37', interval =
       cal1m = dataTable_micro$start-x; cal2m = dataTable_micro$end-x
       cal1_im = intersect(which(cal1m <= abs(range[1])), which(cal1m > 0))
       cal2_im = intersect(which(abs(cal2m) <= range[2]), which(cal2m < 0))
-      dat_m = data.frame(dataTable[c(cal1_im, cal2_im),], dist = -c(cal1m[cal1_im], cal2m[cal2_im]))
+      dat_m = data.frame(dataTable_micro[c(cal1_im, cal2_im),], dist = -c(cal1m[cal1_im], cal2m[cal2_im]))
       dat_m = unique(data.frame('query' = rep(y, nrow(dat_m)), dat_m))
       dat_m = dat_m[which(dat_m$chr == z),]
       dat_m = dat_m[order(abs(dat_m$dist), decreasing = FALSE),][1,]

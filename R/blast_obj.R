@@ -1,8 +1,7 @@
 #' @title Retroviral vector integration site object
 #' 
-#' @description \preformatted{
-#' Data used in example code of \code{makeInputObj}.
-#' }
+#' @description
+#' Data used in example code of integration site annotation functions
 #' 
 #' @docType data
 #' @usage 
