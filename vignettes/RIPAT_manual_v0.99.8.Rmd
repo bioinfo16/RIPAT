@@ -177,30 +177,26 @@ To see the retroviral vector integration site at glance, we procide the karyoplo
 + makeDocument  
 RIPAT rearrange the result of each annotation function. This function is for users who are not familar to deal R for RIPAT. This function makes two documents about exprimental(observed) data and random set data. In addition, it show the histogram to see the distribution from featres and draw a p-value plot by p-value to see the result of randoma set analysis at glance.  
     ``` {R results='hide', message=FALSE}
-    makeDocument(res = blast_gene10K, 
-                 resType = 'gene',
-                 interval = 5000,
-                 range = c(-20000, 20000),
-                 outPath = getwd(),
-                 includeUndecided = FALSE,
-                 outFileName = 'A5_15856M_BLAST_10K')  
+    makeDocument(res = blast_gene10K, dataType = 'gene',
+                 excelOut = TRUE, includeUndecided = FALSE,
+                 outPath = getwd(), outFileName = 'A5_15856M_BLAST_10K')  
     ```  
 
 **[ Histogram of experimental data ]**  
 ``` {R echo=FALSE}
-    knitr::include_graphics('A5_15856M_BLAST_10K_histogram_observed.png')
+    knitr::include_graphics('A5_15856M_BLAST_10K_histogram_observed_gene.png')
 ```    
 
 **[ Histogram of random data ]**  
 ``` {R echo=FALSE}
-    knitr::include_graphics('A5_15856M_BLAST_10K_histogram_random.png')
+    knitr::include_graphics('A5_15856M_BLAST_10K_random_histogram_observed_gene.png')
 ```
   
 In p-value plot, full-colored circle means significant difference between exprimental data and random data (p-value <= 0.05). Circle size is p-value transformation score for visualization.  
 
 **[ P-value plot ]**  
 ``` {R echo=FALSE}
-    knitr::include_graphics('A5_15856M_BLAST_10K_pvalue_plot.png')
+    knitr::include_graphics('A5_15856M_BLAST_10K_pvalue_plot_gene.png')
 ```
 
 # Session information
