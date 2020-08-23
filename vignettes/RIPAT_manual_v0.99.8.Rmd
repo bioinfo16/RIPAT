@@ -177,9 +177,12 @@ To see the retroviral vector integration site at glance, we procide the karyoplo
 + makeDocument  
 RIPAT rearrange the result of each annotation function. This function is for users who are not familar to deal R for RIPAT. This function makes two documents about exprimental(observed) data and random set data. In addition, it show the histogram to see the distribution from featres and draw a p-value plot by p-value to see the result of randoma set analysis at glance.  
     ``` {R results='hide', message=FALSE}
-    makeDocument(res = blast_gene10K, dataType = 'gene',
-                 excelOut = TRUE, includeUndecided = FALSE,
-                 outPath = getwd(), outFileName = 'A5_15856M_BLAST_10K')  
+    makeDocument(res = blast_gene10K,
+                 dataType = 'gene',
+                 excelOut = TRUE,
+                 includeUndecided = FALSE,
+                 outPath = getwd(),
+                 outFileName = 'A5_15856M_BLAST_10K')  
     ```  
 
 **[ Histogram of experimental data ]**  
