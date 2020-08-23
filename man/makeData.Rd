@@ -2,24 +2,19 @@
 % Please edit documentation in R/makeData.R
 \name{makeData}
 \alias{makeData}
-\title{Make data files for RIPAT}
+\title{Make data files for RIPAT.}
 \usage{
 makeData(organism = 'GRCh37', dataType = 'gene')
 }
 \arguments{
-\item{organism}{a single character. 2 versions of organisms such as GRCh37, GRCh38 (Human). Default is 'GRCh37'.}
+\item{organism}{a single character. Two versions of organism such as GRCh37, GRCh38 (Human). Default is 'GRCh37'.}
 
 \item{dataType}{a single character. Data type what user needs (gene, cpg, repeat and variant). Default is 'gene'.}
 }
 \description{
-\preformatted{
-RIPAT use specific format of data files for retroviral vector 
-integration pattern analysis. This function made these data files from
-well-known genomic databases easily. The data file location is extdata folder of RIPAT.
-}
+Download datafiles for running RIPAT.
 }
 \examples{
-
 makeData(organism = 'GRCh37')
 
 }

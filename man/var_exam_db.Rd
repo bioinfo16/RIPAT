@@ -9,9 +9,7 @@
 data(var_exam_db)
 }
 \description{
-\preformatted{
-Data used in example code of \code{annoByVar}.
-}
+Data used in example code of \code{annoByVar}
 }
 \examples{
 data(var_exam_db)

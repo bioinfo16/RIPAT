@@ -2,46 +2,49 @@
 % Please edit documentation in R/annoByRepeat.R
 \name{annoByRepeat}
 \alias{annoByRepeat}
-\title{Annotate the vector integration site by repeat sequence data.}
+\title{Annotate integration sites by repeats and microsatellites.}
 \usage{
 annoByRepeat(hits, mapTool = 'blast', organism = 'GRCh37', interval = 5000, 
-             range = c(-20000, 20000), doRandom = TRUE, randomSize = if(doRandom){10000}else{NULL}, 
+             range = c(-20000, 20000), doRandom = TRUE,
+             randomSize = if(doRandom){10000}else{NULL}, 
              includeUndecided = FALSE, outPath = getwd(),
              outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 }
 \arguments{
 \item{hits}{a GR object. This object made by \code{makeInputObj} function.}
 
-\item{mapTool}{a single character. Function serves two types of object such as outputs from BLAST and BLAT.
+\item{mapTool}{a single character. Function serves two types of object
+such as outputs from BLAST and BLAT.
 Default is 'blast'. If you want to use BLAT result, use 'blat'.}
 
-\item{organism}{a single character. This function can run by 2 versions of organisms such as GRCh37, GRCh38 (Human). Default is 'GRCh37'.}
+\item{organism}{a single character. This function can run by two versions of organisms
+such as GRCh37, GRCh38 (Human). Default is 'GRCh37'.}
 
-\item{interval}{an integer vector. This number means interval number for distribution analysis. Default is 5000.}
+\item{interval}{an integer vector. This number means interval number for
+distribution analysis. Default is 5000.}
 
-\item{range}{an integer array. It means the range for highlight region of this analysis. Default range is c(-20000, 20000).}
+\item{range}{an integer array. The range of highlight region for analysis.
+Default range is c(-20000, 20000).}
 
-\item{doRandom}{TRUE or FALSE. If user types TRUE, random set is generated and do random distribution analysis.
-If this value is FALSE, random distribution analysis is not executed. Default is TRUE.}
+\item{doRandom}{TRUE or FALSE. If user types TRUE, random set is generated
+and user can do random distribution analysis. Default is TRUE.
+If this value is FALSE, random distribution analysis is not executed.}
 
 \item{randomSize}{an integer vector. A random set size. Default is 10000.}
 
-\item{includeUndecided}{TRUE or FALSE. If user want to use undecided hits in analysis, enter TRUE.
-Default is FALSE.}
+\item{includeUndecided}{TRUE or FALSE. If user want to use undecided hits in analysis,
+enter TRUE. Default is FALSE.}
 
 \item{outPath}{an string vector. Plots are saved in this path. Default value is R home directory.}
 
 \item{outFileName}{a character vector. Attached ID to the result file name.}
 }
 \value{
-Return a result list that is made up of insertion and distribution result tables and GenomicRange object of Repeat data.
+Return a result list that is made up of insertion and distribution result tables
+        and GenomicRange object of Rpeat and microsatellite data.
 }
 \description{
-\preformatted{
-This function uses repeat sequence data to search the feature of integration regions.
-User can get query sequence inserted in repeat sites and distribution from repeat coordinations.
-Plus, users can do random distribution analysis by this function.
-}
+Annotate vector integration sites by repeat and microsatellite data.
 }
 \examples{
 data(blast_obj); data(repeat_exam_db); data(micro_exam_db)
@@ -50,5 +53,4 @@ saveRDS(micro_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh3
 
 blast_repeat = annoByRepeat(hits = blast_obj, doRandom = FALSE, outFileName = 'blast_res')
 
-          
 }

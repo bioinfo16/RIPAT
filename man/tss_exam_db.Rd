@@ -9,9 +9,7 @@
 data(tss_exam_db)
 }
 \description{
-\preformatted{
-Data used in example code of \code{annoByGene}.
-}
+Data used in example code of \code{annoByGene}
 }
 \examples{
 data(tss_exam_db)

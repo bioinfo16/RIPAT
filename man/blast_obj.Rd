@@ -4,16 +4,12 @@
 \name{blast_obj}
 \alias{blast_obj}
 \title{Retroviral vector integration site object}
-\format{
-GRange object
-}
+\format{GRange object}
 \usage{
 data(blast_obj)
 }
 \description{
-\preformatted{
-Data used in example code of \code{makeInputObj}.
-}
+Data used in example code of integration site annotation functions
 }
 \examples{
 data(blast_obj)

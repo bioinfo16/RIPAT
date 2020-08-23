@@ -9,9 +9,7 @@
 data(cpg_exam_db)
 }
 \description{
-\preformatted{
-Data used in example code of \code{annoByCpG}.
-}
+Data used in example code of \code{annoByCpG}
 }
 \examples{
 data(cpg_exam_db)

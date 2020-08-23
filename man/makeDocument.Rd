@@ -2,41 +2,36 @@
 % Please edit documentation in R/makeDocument.R
 \name{makeDocument}
 \alias{makeDocument}
-\title{Make result documents as excel files.}
+\title{Make the result object and document.}
 \usage{
-makeDocument(res, resType, includeUndecided = FALSE, interval = 5000, 
-             range = c(-20000, 20000), outPath = getwd(),
+makeDocument(res, dataType, excelOut = TRUE, 
+             includedUndecided = FALSE, outPath = getwd(),
              outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 }
 \arguments{
 \item{res}{a GR object. This object is output of \code{annoByGene, annoByCpG, annoByRepeat, annoByVar} function.}
 
-\item{resType}{a character vector. User enter the annotation type of input
+\item{dataType}{a character vector. User enter the annotation type of input
 such as gene, cpg, repeat and variant.}
+
+\item{excelOut}{TRUE or FALSE. If user want to make excel file, enter TRUE.
+Default is TRUE.}
 
 \item{includeUndecided}{TRUE or FALSE. If user want to use undecided hits in analysis, enter TRUE.
 Default is FALSE.}
-
-\item{interval}{an integer vector. This number means interval number for distribution analysis. Default is 5000.}
-
-\item{range}{an integer array. It means the range for highlight region of this analysis. Default range is c(-20000, 20000).}
 
 \item{outPath}{an string vector. Plots are saved in this path. Default value is R home directory.}
 
 \item{outFileName}{a character vector. Attached ID to the result file name.}
 }
 \value{
-make excel file about vector integration sites and proportion test result.
+Make output table and excel files about vector integration sites and proportion test result.
 }
 \description{
-\preformatted{
-User can make the excel file for output data preservation by this function.
-}
+Rearrange the result from annotation functions.
 }
 \examples{
 data(blast_gene)
-makeDocument(res = blast_gene, resType = 'gene', interval = 5000, 
-             range = c(-20000, 20000), outFileName = 'blast_gene_res')
-
+makeDocument(res = blast_gene, dataType = 'gene', outFileName = 'blast_gene_res')
 
 }
