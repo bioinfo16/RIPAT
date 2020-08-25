@@ -5,7 +5,7 @@
 \title{Make the result object and document.}
 \usage{
 makeDocument(res, dataType, excelOut = TRUE, 
-             includedUndecided = FALSE, outPath = getwd(),
+             includeUndecided = FALSE, outPath = getwd(),
              outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 }
 \arguments{
