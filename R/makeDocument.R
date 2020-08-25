@@ -5,7 +5,7 @@
 #' 
 #' @usage 
 #' makeDocument(res, dataType, excelOut = TRUE, 
-#'              includedUndecided = FALSE, outPath = getwd(),
+#'              includeUndecided = FALSE, outPath = getwd(),
 #'              outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 #' 
 #' @param res a GR object. This object is output of \code{annoByGene, annoByCpG, annoByRepeat, annoByVar} function.
@@ -65,7 +65,7 @@ makeDocument = function(res, dataType ='gene', excelOut = TRUE, includeUndecided
         dist_u_tab2 = dist_u_tab2[-which(is.na(dist_u_tab2$query)),]
       }}
     message('- Edit random data')
-    if(length(which(names(res) == 'Random_distribution')) != 0){ #Random
+    if(length(which(names(res) == 'Random_distribution')) != 0){
       if(dataType == 'repeat'){
         rinside_tab = data.frame(do.call('rbind', res[[10]]), stringsAsFactors = FALSE)
         rdist_list = lapply(res[[12]], function(a){return(a[[1]])})
@@ -95,7 +95,6 @@ makeDocument = function(res, dataType ='gene', excelOut = TRUE, includeUndecided
         if(length(which(is.na(rdist_tab$query))) != 0){rdist_tab = rdist_tab[-which(is.na(rdist_tab$query)),]}
       } else {stop("[ERROR] 'dataType' needs the data type used in annotation.\n----- This process is halted. (Time : ", date(), ")\n")}
     } else {}
-    # Test data
     message('- Compare experimental data and random data')
     if(dataType %in% c('gene', 'repeat')){
       range = as.numeric(as.character(res[[3]][,1])) * 1000
@@ -182,8 +181,8 @@ makeDocument = function(res, dataType ='gene', excelOut = TRUE, includeUndecided
           htab = res$Repeat_plot_data; htab2 = res$Micro_plot_data
           htab = data.frame(htab[c(1:(nrow(htab)/2)),], htab[c((nrow(htab)/2+1):nrow(htab)),c(2:4)], stringsAsFactors = FALSE)
           htab2 = data.frame(htab2[c(1:(nrow(htab2)/2)),], htab2[c((nrow(htab2)/2+1):nrow(htab2)),c(2:4)], stringsAsFactors = FALSE)
-          colnames(htab) = c('Range', paste0(colnames(htab)[2:4], rep(c(1, 2), c(3,3))))
-          colnames(htab2) = c('Range', paste0(colnames(htab2)[2:4], rep(c(1, 2), c(3,3))))
+          colnames(htab) = c('Range', paste0(colnames(htab)[2:4], rep(c(1,2), c(3,3))))
+          colnames(htab2) = c('Range', paste0(colnames(htab2)[2:4], rep(c(1,2), c(3,3))))
           htab_new1 = data.frame(htab, 'test_pvalue' = test_all_p_value1); htab_new2 = data.frame(htab2, 'test_pvalue' = test_all_p_value2)
           names(htab_new1) = names(htab_new2) = c('Range', 'Group1', 'Count1', 'Freq1', 'Group2', 'Count2', 'Freq2',  'test_pvalue')
         }
