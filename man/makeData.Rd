@@ -11,6 +11,9 @@ makeData(organism = 'GRCh37', dataType = 'gene')
 
 \item{dataType}{a single character. Data type what user needs (gene, cpg, repeat and variant). Default is 'gene'.}
 }
+\value{
+Database files are saved in the extdata directory of RIPAT.
+}
 \description{
 Download datafiles for running RIPAT.
 }
