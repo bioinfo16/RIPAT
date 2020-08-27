@@ -4,7 +4,9 @@
 \name{tss_exam_db}
 \alias{tss_exam_db}
 \title{Data file for annoByGene vignette}
-\format{Data table object}
+\format{
+Data table object
+}
 \usage{
 data(tss_exam_db)
 }

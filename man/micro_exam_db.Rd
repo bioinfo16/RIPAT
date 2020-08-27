@@ -4,7 +4,9 @@
 \name{micro_exam_db}
 \alias{micro_exam_db}
 \title{Data file for annoByRepeat vignette}
-\format{Data table object}
+\format{
+Data table object
+}
 \usage{
 data(micro_exam_db)
 }
