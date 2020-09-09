@@ -211,12 +211,12 @@ annoByRepeat = function(hits, mapTool = 'blast', organism = 'GRCh37', interval =
   if(doRandom){
     count_site = hist_obj$counts; count_site_ran = hist_obj_ran$counts
     count_m_site = hist_obj_m$counts; count_m_site_ran = hist_obj_m_ran$counts
-    if(includeUndecided){count_all = sum(length(all_dist_only), length(all_dist_dup))} else {count_all = length(all_dist_only)}
+    if(includeUndecided){count_all = sum(c(nrow(only_hits_tab), nrow(dup_hits_tab)))} else {count_all = nrow(only_hits_tab)}
     count_data = data.frame('Range' = factor(rep(ranges[ranges != 0]/1000, 2), levels = ranges[ranges != 0]/1000), 'Group' = c(rep('Observed', length(count_site)), rep('Random', length(count_site_ran))), 'Count' = c(count_site, count_site_ran), 'Freq' = c(count_site/count_all, count_site_ran/randomSize))
     count_m_data = data.frame('Range' = factor(rep(ranges[ranges != 0]/1000, 2), levels = ranges[ranges != 0]/1000), 'Group' = c(rep('Observed', length(count_m_site)), rep('Random', length(count_m_site_ran))), 'Count' = c(count_m_site, count_m_site_ran), 'Freq' = c(count_m_site/count_all, count_m_site_ran/randomSize))
   } else {
     count_site = hist_obj$counts; count_m_site = hist_obj_m$counts
-    if(includeUndecided){count_all = sum(length(all_dist_only), length(all_dist_dup))} else {count_all = length(all_dist_only)}
+    if(includeUndecided){count_all = sum(c(nrow(only_hits_tab), nrow(dup_hits_tab)))} else {count_all = nrow(only_hits_tab)}
     count_data = data.frame('Range' = factor(ranges[ranges != 0]/1000, levels = ranges[ranges != 0]/1000), 'Group' = rep('Observed', length(count_site)), 'Count' = count_site, 'Freq' = count_site/count_all)
     count_m_data = data.frame('Range' = factor(ranges[ranges != 0]/1000, levels = ranges[ranges != 0]/1000), 'Group' = rep('Observed', length(count_m_site)), 'Count' = count_m_site, 'Freq' = count_m_site/count_all)
   }
@@ -226,9 +226,9 @@ annoByRepeat = function(hits, mapTool = 'blast', organism = 'GRCh37', interval =
     ggplot2::xlab('Intervals (Kbs)') + ggplot2::ylab("Ratio of Integration Events") + ggplot2::scale_fill_manual(values = c('mediumspringgreen', 'mediumpurple')) +
     ggplot2::theme(panel.background = ggplot2::element_rect(fill="white", colour = "white"), panel.grid.major = ggplot2::element_line(size = 0.5, linetype = 'dotted', colour = 'black'),
                    axis.line = ggplot2::element_line(colour = "darkgrey"), legend.title = ggplot2::element_blank(),
-                   legend.key.size = ggplot2::unit(0.7, "cm"), plot.title = ggplot2::element_text(hjust = 0.5, face = "bold", size = 15),
-                   legend.text = ggplot2::element_text(size = 13), axis.text.x = ggplot2::element_text(size = 12),
-                   axis.text.y = ggplot2::element_text(size = 12), axis.title.x = ggplot2::element_text(size = 13), axis.title.y = ggplot2::element_text(size = 13))
+                   legend.key.size = ggplot2::unit(0.7, "cm"), plot.title = ggplot2::element_text(hjust = 0.5, face = "bold", size = 20),
+                   legend.text = ggplot2::element_text(size = 18), axis.text = ggplot2::element_text(size = 17),
+                   axis.title = ggplot2::element_text(size = 18))
   print(r_plot)
   grDevices::dev.off()
   grDevices::png(paste0(outPath, '/', outFileName, '_distribution_microsatellite_', organism, '.png'), width = 1200, height = 750)
@@ -237,9 +237,9 @@ annoByRepeat = function(hits, mapTool = 'blast', organism = 'GRCh37', interval =
     ggplot2::xlab('Intervals (Kbs)') + ggplot2::ylab("Ratio of Integration Events") + ggplot2::scale_fill_manual(values = c('mediumspringgreen', 'mediumpurple')) +
     ggplot2::theme(panel.background = ggplot2::element_rect(fill="white", colour = "white"), panel.grid.major = ggplot2::element_line(size = 0.5, linetype = 'dotted', colour = 'black'),
                    axis.line = ggplot2::element_line(colour = "darkgrey"), legend.title = ggplot2::element_blank(),
-                   legend.key.size = ggplot2::unit(0.7, "cm"), plot.title = ggplot2::element_text(hjust = 0.5, face = "bold", size = 15),
-                   legend.text = ggplot2::element_text(size = 13), axis.text.x = ggplot2::element_text(size = 12),
-                   axis.text.y = ggplot2::element_text(size = 12), axis.title.x = ggplot2::element_text(size = 13), axis.title.y = ggplot2::element_text(size = 13))
+                   legend.key.size = ggplot2::unit(0.7, "cm"), plot.title = ggplot2::element_text(hjust = 0.5, face = "bold", size = 20),
+                   legend.text = ggplot2::element_text(size = 18), axis.text = ggplot2::element_text(size = 17),
+                   axis.title = ggplot2::element_text(size = 18))
   print(m_plot)
   grDevices::dev.off()
   message('- OK!')

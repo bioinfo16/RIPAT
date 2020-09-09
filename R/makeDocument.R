@@ -139,13 +139,20 @@ makeDocument = function(res, dataType ='gene', excelOut = TRUE, includeUndecided
           gg_tab_test_all2 = cbind(gg_tab_test_all2, valid_p2)
           gg_tab_test_all2$group = as.character(rep(ranges[-which(ranges == 0)]/1000, nrow(gg_tab_test_all2)/(length(ranges)-1)))
           gg_tab_test_all2$group = factor(gg_tab_test_all2$group, levels = as.character(ranges[-which(ranges == 0)]/1000))
+          check_na = which(is.na(gg_tab_test_all2$convert_p))
+          if(length(check_na) == 0){
+            min_scale = min(gg_tab_test_all2$convert_p)
+            max_scale = max(gg_tab_test_all2$convert_p)
+          } else {
+            min_scale = min(gg_tab_test_all2$convert_p[-check_na])
+            max_scale = max(gg_tab_test_all2$convert_p[-check_na])
+          }
           grDevices::png(paste0(outPath, '/', outFileName, hist_file4), width = 1200, height = 800)
           p_plot2 = ggplot2::ggplot(gg_tab_test_all2, 
                                     ggplot2::aes(x = group, y = factor(type, levels = names(obs_hist2)[c(length(obs_hist2):1)]), 
                                                  size = convert_p, shape = factor(valid_p2, levels = unique(valid_p2)[c(2,1)]))) +
             ggplot2::geom_point(color = 'navy') + 
-            ggplot2::scale_size(range = c(min(gg_tab_test_all2$convert_p[-which(is.na(gg_tab_test_all2$convert_p))]), 
-                                          max(gg_tab_test_all2$convert_p[-which(is.na(gg_tab_test_all2$convert_p))])), guide = FALSE) +
+            ggplot2::scale_size(range = c(min_scale, max_scale), guide = FALSE) +
             ggplot2::theme(panel.background = ggplot2::element_blank(), 
                            panel.grid = ggplot2::element_line(linetype = "dotted", color = "black"),
                            axis.text.x = ggplot2::element_text(hjust = 1, angle = 45, size = 15), axis.text.y = ggplot2::element_text(size = 15),
@@ -159,12 +166,14 @@ makeDocument = function(res, dataType ='gene', excelOut = TRUE, includeUndecided
           grDevices::dev.off()
         }
         grDevices::png(paste0(outPath, '/', outFileName, hist_file2), width = 3000, height = 2000)
-        par(mfrow = c(4, ceiling(length(exp_types2)/4)))
-        lapply(c(1:length(obs_hist2)), function(a){plot(obs_hist2[[a]], col = '#008080', main = names(type_tab2)[a], cex.main = 3)})
+        if(length(exp_types2) == 1){NULL} else {par(mfrow = c(4, ceiling(length(exp_types2)/4)))}
+        lapply(c(1:length(obs_hist2)), function(a){plot(obs_hist2[[a]], col = '#008080', main = names(type_tab2)[a], ylim = c(0, max(obs_hist2[[a]]$counts)+10),
+                                                        cex.axis = 3, cex.lab = 3, cex.main = 5)})
         grDevices::dev.off()
         grDevices::png(paste0(outPath, '/', outFileName, '_random', hist_file2), width = 3000, height = 2000)
-        par(mfrow = c(6, ceiling(length(ran_hist2)/6)))
-        lapply(c(1:length(ran_hist2)), function(a){plot(ran_hist2[[a]], col = '#4682B4', main = names(ran_type_tab2)[a], cex.main = 3)})
+        if(length(ran_hist2) == 1){NULL} else {par(mfrow = c(6, ceiling(length(ran_hist2)/6)))}
+        lapply(c(1:length(ran_hist2)), function(a){plot(ran_hist2[[a]], col = '#4682B4', main = names(ran_type_tab2)[a], ylim = c(0, max(ran_hist2[[a]]$counts)+10),
+                                                        cex.axis = 3, cex.lab = 3, cex.main = 5)})
         grDevices::dev.off()
       } else {
         hist_file1 = '_histogram_observed_repeat.png'
@@ -188,13 +197,15 @@ makeDocument = function(res, dataType ='gene', excelOut = TRUE, includeUndecided
         }
       }
       grDevices::png(paste0(outPath, '/', outFileName, hist_file1), width = 2000, height = 1000)
-      par(mfrow = c(3, ceiling(length(exp_types)/3)))
-      lapply(c(1:length(obs_hist1)), function(a){plot(obs_hist1[[a]], col = '#008080', main = names(type_tab1)[a], cex.main = 3)})
+      if(length(exp_types) == 1){NULL} else {par(mfrow = c(3, ceiling(length(exp_types)/3)))}
+      lapply(c(1:length(obs_hist1)), function(a){plot(obs_hist1[[a]], col = '#008080', main = names(type_tab1)[a], ylim = c(0, max(obs_hist1[[a]]$counts)+10),
+                                                      cex.axis = 3, cex.lab = 3, cex.main = 5)})
       grDevices::dev.off()
       ran_hist1 = lapply(ran_type_tab, function(a){hist(a$dist, breaks = ranges, plot = FALSE)})
       grDevices::png(paste0(outPath, '/', outFileName, '_random', hist_file1), width = 2000, height = 1000)
-      par(mfrow = c(4, ceiling(length(ran_hist1)/4)))
-      lapply(c(1:length(ran_hist1)), function(a){plot(ran_hist1[[a]], col = '#4682B4', main = names(ran_type_tab)[a], cex.main = 3)})
+      if(length(ran_hist1) == 1){NULL} else {par(mfrow = c(4, ceiling(length(ran_hist1)/4)))}
+      lapply(c(1:length(ran_hist1)), function(a){plot(ran_hist1[[a]], col = '#4682B4', main = names(ran_type_tab)[a], ylim = c(0, max(ran_hist1[[a]]$counts)+10),
+                                                      cex.axis = 3, cex.lab = 3, cex.main = 5)})
       grDevices::dev.off()
       if(length(which(names(res) == 'Random_distribution')) != 0){
         test_res1 = lapply(c(1:length(obs_hist1)), function(a){
@@ -218,13 +229,20 @@ makeDocument = function(res, dataType ='gene', excelOut = TRUE, includeUndecided
         gg_tab_test_all1 = cbind(gg_tab_test_all1, valid_p1)
         gg_tab_test_all1$group = as.character(rep(ranges[-which(ranges == 0)]/1000, nrow(gg_tab_test_all1)/(length(ranges)-1)))
         gg_tab_test_all1$group = factor(gg_tab_test_all1$group, levels = as.character(ranges[-which(ranges == 0)]/1000))
+        check_na1 = which(is.na(gg_tab_test_all1$convert_p))
+        if(length(check_na1) == 0){
+          min_scale1 = min(gg_tab_test_all1$convert_p)
+          max_scale1 = max(gg_tab_test_all1$convert_p)
+        } else {
+          min_scale1 = min(gg_tab_test_all1$convert_p[-check_na1])
+          max_scale1 = max(gg_tab_test_all1$convert_p[-check_na1])
+        }
         grDevices::png(paste0(outPath, '/', outFileName, hist_file3), width = 1000, height = 800)
         p_plot1 = ggplot2::ggplot(gg_tab_test_all1, 
                                   ggplot2::aes(x = group, y = factor(type, levels = names(obs_hist1)[c(length(obs_hist1):1)]), 
                                                size = convert_p, shape = factor(valid_p1, levels = unique(valid_p1)[c(2,1)]))) +
           ggplot2::geom_point(color = '#663399') + 
-          ggplot2::scale_size(range = c(min(gg_tab_test_all1$convert_p[-which(is.na(gg_tab_test_all1$convert_p))]), 
-                                        max(gg_tab_test_all1$convert_p[-which(is.na(gg_tab_test_all1$convert_p))])), guide = FALSE) +
+          ggplot2::scale_size(range = c(min_scale1, max_scale1), guide = FALSE) +
           ggplot2::theme(panel.background = ggplot2::element_blank(), 
                          panel.grid = ggplot2::element_line(linetype = "dotted", color = "black"),
                          axis.line = ggplot2::element_line(color = "black"),
