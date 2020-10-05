@@ -4,13 +4,13 @@
 #' Annotate vector integration sites by repeat and microsatellite data.
 #' 
 #' @usage 
-#' annoByRepeat(hits, mapTool = 'blast', organism = 'GRCh37', interval = 5000, 
-#'              range = c(-20000, 20000), doRandom = TRUE,
-#'              randomSize = if(doRandom){10000}else{NULL}, 
+#' annoByRepeat(hits, ran_hits = NULL, mapTool = 'blast',
+#'              organism = 'GRCh37', interval = 5000, range = c(-20000, 20000), 
 #'              includeUndecided = FALSE, outPath = getwd(),
 #'              outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 #' 
 #' @param hits a GR object. This object made by \code{makeInputObj} function.
+#' @param ran_hits a GR object or list. This object is output of \code{ranSetGenerator} function.
 #' @param mapTool a single character. Function serves two types of object
 #'                such as outputs from BLAST and BLAT.
 #'                Default is 'blast'. If you want to use BLAT result, use 'blat'.
@@ -20,10 +20,6 @@
 #'                 distribution analysis. Default is 5000.
 #' @param range an integer array. The range of highlight region for analysis.
 #'              Default range is c(-20000, 20000).
-#' @param doRandom TRUE or FALSE. If user types TRUE, random set is generated
-#'                 and user can do random distribution analysis. Default is TRUE.
-#'                 If this value is FALSE, random distribution analysis is not executed.
-#' @param randomSize an integer vector. A random set size. Default is 10000.
 #' @param includeUndecided TRUE or FALSE. If user want to use undecided hits in analysis,
 #'                         enter TRUE. Default is FALSE.
 #' @param outPath an string vector. Plots are saved in this path. Default value is R home directory.
@@ -37,10 +33,10 @@
 #' saveRDS(repeat_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_repeat.rds'))
 #' saveRDS(micro_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_microsat.rds'))
 #' 
-#' blast_repeat = annoByRepeat(hits = blast_obj, doRandom = FALSE, outFileName = 'blast_res')
+#' blast_repeat = annoByRepeat(hits = blast_obj, ran_hits = NULL, outFileName = 'blast_res')
 #' 
 #' @export
-annoByRepeat = function(hits, mapTool = 'blast', organism = 'GRCh37', interval = 5000, range = c(-20000, 20000), doRandom = TRUE, randomSize = if(doRandom){10000}else{NULL}, includeUndecided = FALSE, outPath = getwd(), outFileName = paste0('RIPAT', round(unclass(Sys.time())))){
+annoByRepeat = function(hits, ran_hits = NULL, mapTool = 'blast', organism = 'GRCh37', interval = 5000, range = c(-20000, 20000), includeUndecided = FALSE, outPath = getwd(), outFileName = paste0('RIPAT', round(unclass(Sys.time())))){
   message('----- Annotate integration sites. (Time : ', date(), ')')
   message('- Validate options')
   if(length(which(c('blast', 'blat') %in% mapTool)) == 0){stop("[ERROR] Please confirm the alignment tool name.\n----- This process is halted. (Time : ", date(), ")\n")}
@@ -133,26 +129,10 @@ annoByRepeat = function(hits, mapTool = 'blast', organism = 'GRCh37', interval =
     hist_dup_m = hist(unlist(lapply(dist_dup, function(x){x[[2]]$dist/1000})), breaks = ranges/1000, plot = FALSE)
   }
   message('- OK!')
-  if(doRandom){
+  if(!is.null(ran_hits)){
     message('- Do random set analysis.')
-    seed = round(unclass(Sys.time()))
-    ch_size = readRDS(file = system.file("extdata", paste0(organism, '_chrom.rds'), package = "RIPAT"))
-    ch_size_num = as.numeric(ch_size$length)
-    ch_start = cumsum(ch_size_num) - ch_size_num + 1
-    ch_end = cumsum(ch_size_num)
-    ch_ratio = (ch_size_num / sum(ch_size_num))
-    random_set = sample(ch_size$chrom, size = randomSize, replace = TRUE, prob = ch_ratio)
-    count_ch = plyr::count(random_set); row.names(count_ch) = count_ch$x
-    count_ch = count_ch[ch_size$chrom,]
-    count_ch = cbind(count_ch, ch_size_num)
-    ran_set = apply(count_ch, 1, function(x){sample(c(1:x[3]), size = x[2], replace = FALSE, prob = NULL)})
-    chr_ran = rep(paste0('chr', count_ch$x), count_ch$freq)
-    pos_ran = unlist(ran_set)
-    ran_tab = data.frame('Random' = c(1:randomSize), 'Random_chr' = chr_ran, 'Random_pos' = pos_ran, stringsAsFactors = FALSE)
-    tmp = ran_tab[,c(2,3,3)]
-    names(tmp) = c('chr', 'start', 'end')
-    gr_random = GenomicRanges::makeGRangesFromDataFrame(tmp)
-    utils::write.table(ran_tab, file = paste0(outPath, '/', outFileName, '_Random_set_', organism, '_repeat.txt'), quote = FALSE, append = FALSE, sep = '\t', na = '', row.names = FALSE, col.names = TRUE)
+    randomSize = length(ran_hits); gr_random = ran_hits
+    random_set = data.frame(c(1:randomSize), data.frame(ran_hits), stringsAsFactors = FALSE)[,c(1:3)]; names(random_set) = c('Random', 'Random_chr', 'Random_pos')
     inside_repeat_ran = as.data.frame(GenomicRanges::findOverlaps(gr_random, gr_repeat, type = 'any', ignore.strand = TRUE), stringsAsFactors = FALSE)
     a = as.data.frame(gr_random[inside_repeat_ran$queryHits,], stringsAsFactors = FALSE)
     b = dataTable[inside_repeat_ran$subjectHits,]
@@ -163,8 +143,8 @@ annoByRepeat = function(hits, mapTool = 'blast', organism = 'GRCh37', interval =
     b2 = dataTable_micro[inside_micro_ran$subjectHits,]
     inside_micro_ran_tab = unique(cbind(a2,b2)[,c(1:3, 9, 6:8)])
     names(inside_micro_ran_tab) = c('q_chr', 'q_start', 'q_end', 'microsatellite', 'chr', 'start', 'end')
-    dist_ran = lapply(c(1:nrow(ran_tab)), function(a){
-      x = ran_tab$Random_pos[a]; y = ran_tab$Random[a]; z = ran_tab$Random_chr[a]
+    dist_ran = lapply(c(1:nrow(random_set)), function(a){
+      x = as.numeric(random_set$Random_pos[a]); y = random_set$Random[a]; z = random_set$Random_chr[a]
       cal1p = strp$start-x; cal2p = strp$end-x; cal1n = strn$end-x; cal2n = strn$start-x
       cal1_ip = intersect(which(cal1p <= abs(range[1])), which(cal1p > 0)); cal2_ip = intersect(which(abs(cal2p) <= range[2]), which(cal2p < 0))
       cal1_in = intersect(which(cal1n >= range[1]), which(cal1n < 0)); cal2_in = intersect(which(cal2n <= range[2]), which(cal2n > 0))
@@ -181,10 +161,8 @@ annoByRepeat = function(hits, mapTool = 'blast', organism = 'GRCh37', interval =
       dat_m = dat_m[order(abs(dat_m$dist), decreasing = FALSE),][1,]
       return(list(dat, dat_m))
     })
-    all_dist_ran = unlist(lapply(dist_ran, function(x){x[[1]]$dist}))
-    all_dist_m_ran = unlist(lapply(dist_ran, function(x){x[[2]]$dist}))
-    hist_obj_ran = hist(all_dist_ran, plot = FALSE, breaks = ranges)
-    hist_obj_m_ran = hist(all_dist_m_ran, plot = FALSE, breaks = ranges)
+    all_dist_ran = unlist(lapply(dist_ran, function(x){x[[1]]$dist})); all_dist_m_ran = unlist(lapply(dist_ran, function(x){x[[2]]$dist}))
+    hist_obj_ran = hist(all_dist_ran, plot = FALSE, breaks = ranges); hist_obj_m_ran = hist(all_dist_m_ran, plot = FALSE, breaks = ranges)
     message('- OK!')
   } else {message('[WARN] Skip random set analysis.')}
   message('- Draw histograms.')
@@ -208,7 +186,7 @@ annoByRepeat = function(hits, mapTool = 'blast', organism = 'GRCh37', interval =
     r_dist = list('Decided' = lapply(dist_only, function(x){x[[1]]}))
     m_dist = list('Decided' = lapply(dist_only, function(x){x[[2]]}))
   }
-  if(doRandom){
+  if(!is.null(ran_hits)){
     count_site = hist_obj$counts; count_site_ran = hist_obj_ran$counts
     count_m_site = hist_obj_m$counts; count_m_site_ran = hist_obj_m_ran$counts
     if(includeUndecided){count_all = sum(c(nrow(only_hits_tab), nrow(dup_hits_tab)))} else {count_all = nrow(only_hits_tab)}
@@ -245,7 +223,7 @@ annoByRepeat = function(hits, mapTool = 'blast', organism = 'GRCh37', interval =
   message('- OK!')
   result_list = list(inside_tab, r_dist, count_data, gr_repeat, inside_tab_m, m_dist, count_m_data, gr_micro, organism)
   names(result_list) = c('Repeat_inside', 'Repeat_distribution', 'Repeat_plot_data', 'Repeat_data', 'Micro_inside', 'Micro_distribution', 'Micro_plot_data', 'Micro_data', 'Target_ver')
-  if(doRandom){
+  if(!is.null(ran_hits)){
     result_list = c(result_list, list(inside_repeat_ran_tab, inside_micro_ran_tab, dist_ran))
     names(result_list)[10:12] = c('Repeat_inside_ran', 'Micro_inside_ran', 'Random_distribution')
   }

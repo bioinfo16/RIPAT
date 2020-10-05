@@ -4,14 +4,15 @@
 \alias{annoByRepeat}
 \title{Annotate integration sites by repeats and microsatellites.}
 \usage{
-annoByRepeat(hits, mapTool = 'blast', organism = 'GRCh37', interval = 5000, 
-             range = c(-20000, 20000), doRandom = TRUE,
-             randomSize = if(doRandom){10000}else{NULL}, 
+annoByRepeat(hits, ran_hits = NULL, mapTool = 'blast',
+             organism = 'GRCh37', interval = 5000, range = c(-20000, 20000), 
              includeUndecided = FALSE, outPath = getwd(),
              outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 }
 \arguments{
 \item{hits}{a GR object. This object made by \code{makeInputObj} function.}
+
+\item{ran_hits}{a GR object or list. This object is output of \code{ranSetGenerator} function.}
 
 \item{mapTool}{a single character. Function serves two types of object
 such as outputs from BLAST and BLAT.
@@ -25,12 +26,6 @@ distribution analysis. Default is 5000.}
 
 \item{range}{an integer array. The range of highlight region for analysis.
 Default range is c(-20000, 20000).}
-
-\item{doRandom}{TRUE or FALSE. If user types TRUE, random set is generated
-and user can do random distribution analysis. Default is TRUE.
-If this value is FALSE, random distribution analysis is not executed.}
-
-\item{randomSize}{an integer vector. A random set size. Default is 10000.}
 
 \item{includeUndecided}{TRUE or FALSE. If user want to use undecided hits in analysis,
 enter TRUE. Default is FALSE.}
@@ -51,6 +46,6 @@ data(blast_obj); data(repeat_exam_db); data(micro_exam_db)
 saveRDS(repeat_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_repeat.rds'))
 saveRDS(micro_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_microsat.rds'))
 
-blast_repeat = annoByRepeat(hits = blast_obj, doRandom = FALSE, outFileName = 'blast_res')
+blast_repeat = annoByRepeat(hits = blast_obj, ran_hits = NULL, outFileName = 'blast_res')
 
 }

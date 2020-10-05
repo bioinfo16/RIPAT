@@ -4,13 +4,13 @@
 #' Annotate vector integration sites by CpG site data.
 #'  
 #' @usage 
-#' annoByCpG(hits, mapTool = 'blast', organism = 'GRCh37', interval = 5000, 
-#'           range = c(-20000, 20000), doRandom = TRUE,
-#'           randomSize = if(doRandom){10000}else{NULL}, 
+#' annoByCpG(hits, ran_hits = NULL, mapTool = 'blast',
+#'           organism = 'GRCh37', interval = 5000, range = c(-20000, 20000), 
 #'           includeUndecided = FALSE, outPath = getwd(),
 #'           outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 #' 
 #' @param hits a GR object. This object made by \code{makeInputObj} function.
+#' @param ran_hits a GR object or list. This object is output of \code{ranSetGenerator} function.
 #' @param mapTool a single character. Function serves two types of object
 #'                such as outputs from BLAST and BLAT.
 #'                Default is 'blast'. If you want to use BLAT result, use 'blat'.
@@ -20,10 +20,6 @@
 #'                 distribution analysis. Default is 5000.
 #' @param range an integer array. The range of highlight region for analysis.
 #'              Default range is c(-20000, 20000).
-#' @param doRandom TRUE or FALSE. If user types TRUE, random set is generated
-#'                 and user can do random distribution analysis. Default is TRUE.
-#'                 If this value is FALSE, random distribution analysis is not executed.
-#' @param randomSize an integer vector. A random set size. Default is 10000.
 #' @param includeUndecided TRUE or FALSE. If user want to use undecided hits in analysis,
 #'                         enter TRUE. Default is FALSE.
 #' @param outPath an string vector. Plots are saved in this path. Default value is R home directory.
@@ -36,10 +32,10 @@
 #' data(blast_obj); data(cpg_exam_db)
 #' saveRDS(cpg_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_cpg.rds'))
 #' 
-#' blast_cpg = annoByCpG(hits = blast_obj, doRandom = FALSE, outFileName = 'blast_res')
+#' blast_cpg = annoByCpG(hits = blast_obj, ran_hits = NULL, outFileName = 'blast_res')
 #'            
 #' @export
-annoByCpG = function(hits, mapTool = 'blast', organism = 'GRCh37', interval = 5000, range = c(-20000, 20000), doRandom = TRUE, randomSize = if(doRandom){10000}else{NULL}, includeUndecided = FALSE, outPath = getwd(), outFileName = paste0('RIPAT', round(unclass(Sys.time())))){
+annoByCpG = function(hits, ran_hits = NULL, mapTool = 'blast', organism = 'GRCh37', interval = 5000, range = c(-20000, 20000), includeUndecided = FALSE, outPath = getwd(), outFileName = paste0('RIPAT', round(unclass(Sys.time())))){
   message('----- Annotate integration sites. (Time : ', date(), ')')
   message('- Validate options')
   if(length(which(c('blast', 'blat') %in% mapTool)) == 0){stop("[ERROR] Please confirm the alignment tool name.\n----- This process is halted. (Time : ", date(), ")\n")}
@@ -98,33 +94,17 @@ annoByCpG = function(hits, mapTool = 'blast', organism = 'GRCh37', interval = 50
     hist_dup_c = hist(unlist(lapply(dist_dup, function(x){x$dist/1000})), breaks = ranges/1000, plot = FALSE)
   }
   message('- OK!')
-  if(doRandom){
+  if(!is.null(ran_hits)){
     message('- Do random set analysis.')
-    seed = round(unclass(Sys.time()))
-    ch_size = readRDS(file = system.file("extdata", paste0(organism, '_chrom.rds'), package = "RIPAT"))
-    ch_size_num = as.numeric(ch_size$length)
-    ch_start = cumsum(ch_size_num) - ch_size_num + 1
-    ch_end = cumsum(ch_size_num)
-    ch_ratio = ch_size_num / sum(ch_size_num)
-    random_set = sample(ch_size$chrom, size = randomSize, replace = TRUE, prob = ch_ratio)
-    count_ch = plyr::count(random_set); row.names(count_ch) = count_ch$x
-    count_ch = count_ch[ch_size$chrom,]
-    count_ch = cbind(count_ch, ch_size_num)
-    ran_set = apply(count_ch, 1, function(x){sample(c(1:x[3]), size = x[2], replace = FALSE, prob = NULL)})
-    chr_ran = rep(paste0('chr', count_ch$x), count_ch$freq)
-    pos_ran = unlist(ran_set)
-    ran_tab = data.frame('Random' = c(1:randomSize), 'Random_chr' = chr_ran, 'Random_pos' = pos_ran, stringsAsFactors = FALSE)
-    tmp = ran_tab[,c(2,3,3)]
-    names(tmp) = c('chr', 'start', 'end')
-    gr_random = GenomicRanges::makeGRangesFromDataFrame(tmp)
-    utils::write.table(ran_tab, file = paste0(outPath, '/', outFileName, '_Random_set_', organism, '_cpg.txt'), quote = FALSE, append = FALSE, sep = '\t', na = '', row.names = FALSE, col.names = TRUE)
+    randomSize = length(ran_hits); gr_random = ran_hits
+    random_set = data.frame(c(1:randomSize), data.frame(ran_hits), stringsAsFactors = FALSE)[,c(1:3)]; names(random_set) = c('Random', 'Random_chr', 'Random_pos')
     inside_cpg_ran = as.data.frame(GenomicRanges::findOverlaps(gr_random, gr_cpgs, type = 'any', ignore.strand = TRUE), stringsAsFactors = FALSE)
     a = as.data.frame(gr_random[inside_cpg_ran$queryHits,], stringsAsFactors = FALSE)
     b = dataTable[inside_cpg_ran$subjectHits,]
     inside_ran_tab = unique(cbind(a,b)[,c(1:3,10,7:9,11,12,14,15)])
     names(inside_ran_tab) = c('q_chr', 'q_start', 'q_end', 'CpG_name', 'chr', 'start', 'end', 'length', 'cpgNum', 'perCpg', 'perGc')
-    c_dist_ran = lapply(c(1:nrow(ran_tab)), function(a){
-      x = ran_tab$Random_pos[a]; y = ran_tab$Random[a]; z = ran_tab$Random_chr[a]
+    c_dist_ran = lapply(c(1:nrow(random_set)), function(a){
+      x = as.numeric(random_set$Random_pos[a]); y = random_set$Random[a]; z = random_set$Random_chr[a]
       cal1 = dataTable$start-x; cal2 = dataTable$end-x
       cal1_i = intersect(which(cal1 <= abs(range[1])), which(cal1 > 0)); cal2_i = intersect(which(abs(cal2) <= range[2]), which(cal2 < 0))
       dat = data.frame(dataTable[c(cal1_i, cal2_i),], dist = -c(cal1[cal1_i], cal2[cal2_i]))
@@ -134,7 +114,7 @@ annoByCpG = function(hits, mapTool = 'blast', organism = 'GRCh37', interval = 50
       return(dat)
     })
     all_dist_ran = unlist(lapply(c_dist_ran, function(x){x$dist}))
-    hist_obj_ran = hist(all_dist_ran, plot = FALSE, breaks = seq(from = range[1], to = range[2], by = interval))
+    hist_obj_ran = hist(all_dist_ran, plot = FALSE, breaks = ranges)
     message('- OK!')
   } else {message('[WARN] Skip random set analysis.')}
   message('- Draw histograms.')
@@ -151,15 +131,14 @@ annoByCpG = function(hits, mapTool = 'blast', organism = 'GRCh37', interval = 50
     inside_tab = inside_tab_only
     c_dist = list('Decided' = dist_only)
   }
-  if(doRandom){
+  if(!is.null(ran_hits)){
     count_site = hist_obj$counts; count_site_ran = hist_obj_ran$counts
     if(includeUndecided){count_all = sum(c(nrow(only_hits_tab), nrow(dup_hits_tab)))} else {count_all = nrow(only_hits_tab)}
     count_data = data.frame('Range' = factor(rep(ranges[ranges != 0]/1000, 2), levels = ranges[ranges != 0]/1000), 'Group' = c(rep('Observed', length(count_site)), rep('Random', length(count_site_ran))), 'Count' = c(count_site, count_site_ran), 'Freq' = c(count_site/count_all, count_site_ran/randomSize))
   } else {
     count_site = hist_obj$counts
     if(includeUndecided){count_all = sum(c(nrow(only_hits_tab), nrow(dup_hits_tab)))} else {count_all = nrow(only_hits_tab)}
-    count_data = data.frame('Range' = factor(ranges[ranges != 0]/1000, levels = ranges[ranges != 0]/1000), 
-                            'Group' = rep('Observed', length(count_site)), 'Count' = count_site, 'Freq' = count_site/count_all)
+    count_data = data.frame('Range' = factor(ranges[ranges != 0]/1000, levels = ranges[ranges != 0]/1000), 'Group' = rep('Observed', length(count_site)), 'Count' = count_site, 'Freq' = count_site/count_all)
   }
   grDevices::png(paste0(outPath, '/', outFileName, '_distribution_CpG_', organism, '.png'), width = 1200, height = 750)
   c_plot = ggplot2::ggplot(count_data) + ggplot2::geom_bar(ggplot2::aes(x = Range, y = Freq, fill = Group), stat = "identity", position = "dodge", width = 0.5) +
@@ -175,7 +154,7 @@ annoByCpG = function(hits, mapTool = 'blast', organism = 'GRCh37', interval = 50
   message('- OK!')
   result_list = list(inside_tab, c_dist, count_data, gr_cpgs, organism)
   names(result_list) = c('CpG_inside', 'CpG_distribution', 'CpG_plot_data', 'CpG_data', 'Target_ver')
-  if(doRandom){
+  if(!is.null(ran_hits)){
     result_list = c(result_list, list(inside_ran_tab, c_dist_ran))
     names(result_list)[6:7] = c('CpG_inside_ran', 'Random_distribution')
   }

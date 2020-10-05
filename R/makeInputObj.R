@@ -86,19 +86,23 @@ makeInputObj = function(inFile, mapTool = 'blast', vectorPos = 'front', outPath 
   }
   dup_hits = data.frame(do.call("rbind", max_len_list[which(len_list >= 2)]), stringsAsFactors = FALSE)
   message('- Make GR object.')
-  only_hits_tab = data.frame(only_hits[,c(2,10,10,9,1,3,4)], stringsAsFactors = FALSE)
-  colnames(only_hits_tab) = c('seqname', 'start', 'end', 'strand', 'query', 'identity', 'align_length')
+  only_hits_tab = data.frame(only_hits[,c(2,10,10,1,3,4)], stringsAsFactors = FALSE)
+  colnames(only_hits_tab) = c('seqname', 'start', 'end', 'query', 'identity', 'align_length')
   gr_only = GenomicRanges::makeGRangesFromDataFrame(only_hits_tab, keep.extra.columns = TRUE)
   if(nrow(dup_hits) != 0){
-    dup_hits_tab = data.frame(dup_hits[,c(2,10,10,9,1,3,4)], stringsAsFactors = FALSE)
-    colnames(dup_hits_tab) =  c('seqname', 'start', 'end', 'strand', 'query', 'identity', 'align_length')
+    dup_hits_tab = data.frame(dup_hits[,c(2,10,10,1,3,4)], stringsAsFactors = FALSE)
+    colnames(dup_hits_tab) =  c('seqname', 'start', 'end', 'query', 'identity', 'align_length')
     gr_dup = GenomicRanges::makeGRangesFromDataFrame(dup_hits_tab, keep.extra.columns = TRUE)
   } else {gr_dup = NULL}
   output_list = list('Decided' = gr_only, 'Undecided' = gr_dup)
   message('- OK!')
   message('- Write hit table to file.')
-  hitTable_used = data.frame(rbind(only_hits, dup_hits), stringsAsFactors = FALSE)
-  utils::write.table(hitTable_used, file = paste0(outPath, '/', outFileName, '_Used_hits_from_', mapTool, '.txt'), append = FALSE, quote = FALSE, sep = '\t', na = '', row.names = FALSE, col.names = TRUE)
+  hitTable_only = data.frame(only_hits, stringsAsFactors = FALSE)
+  utils::write.table(hitTable_only, file = paste0(outPath, '/', outFileName, '_Used_hits_from_', mapTool, '_uniqHits.txt'), append = FALSE, quote = FALSE, sep = '\t', na = '', row.names = FALSE, col.names = TRUE)
+  if(length(dup_hits) != 0){
+    hitTable_dups = data.frame(dup_hits, stringsAsFactors = FALSE)
+    utils::write.table(hitTable_dups, file = paste0(outPath, '/', outFileName, '_Used_hits_from_', mapTool, '_nonuniqHits.txt'), append = FALSE, quote = FALSE, sep = '\t', na = '', row.names = FALSE, col.names = TRUE)
+  }
   message('----- Finish. (Time : ', date(), ')')
   return(output_list)
 }
