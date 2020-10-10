@@ -13,16 +13,16 @@ Imports:
     biomaRt (>= 2.38.0),
     GenomicRanges (>= 1.34.0),
     ggplot2 (>= 3.1.0),
-    grDevices (>= 3.5.3),
+    grDevices (>= 4.0),
     IRanges (>= 2.16.0),
     karyoploteR (>= 1.6.3),
     openxlsx (>= 4.1.4),
     plyr (>= 1.8.4),
     regioneR (>= 1.12.0),
     rtracklayer (>= 1.42.2),
-    stats (>= 3.5.3),
+    stats (>= 4.0),
     stringr (>= 1.3.1),
-    utils (>= 3.5.3)
+    utils (>= 4.0)
 Suggests:
     knitr (>= 1.28)
 VignetteBuilder: knitr
