@@ -4,38 +4,41 @@
 #' Annotate vector integration sites by clinical variant data.
 #' 
 #' @usage 
-#' annoByVar(hits, ran_hits = NULL, mapTool = 'blast',
-#'           organism = 'GRCh37', interval = 5000, range = c(-20000, 20000),
-#'           includeUndecided = FALSE, outPath = getwd(),
+#' annoByVar(hits, ran_hits = NULL,
+#'           mapTool = 'blast',
+#'           organism = 'GRCh37',
+#'           interval = 5000,
+#'           range = c(-20000, 20000),
+#'           outPath = getwd(),
 #'           outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 #' 
-#' @param hits a GR object. This object made by \code{makeInputObj} function.
-#' @param ran_hits a GR object or list. This object is output of \code{ranSetGenerator} function.
-#' @param mapTool a single character. Function serves two types of object
-#'                such as outputs from BLAST and BLAT.
+#' @param hits GR object. This object made by \code{\link{makeExpSet}} function.
+#' @param ran_hits GR object or list. This object is output of \code{\link{makeRanSet}} function.
+#' @param mapTool Character. Function uses two types of object\cr from BLAST and BLAT.
 #'                Default is 'blast'. If you want to use BLAT result, use 'blat'.
-#' @param organism a single character. This function can run by two versions of organisms
+#' @param organism Character. This function can run by two versions of organisms\cr
 #'                 such as GRCh37, GRCh38 (Human). Default is 'GRCh37'.
-#' @param interval an integer vector. This number means interval number for
+#' @param interval Integer. This number means interval number\cr for
 #'                 distribution analysis. Default is 5000.
-#' @param range an integer array. The range of highlight region for analysis.
-#'              Default range is c(-20000, 20000).
-#' @param includeUndecided TRUE or FALSE. If user want to use undecided hits in analysis,
-#'                         enter TRUE. Default is FALSE.
-#' @param outPath an string vector. Plots are saved in this path. Default value is R home directory.
-#' @param outFileName a character vector. Attached ID to the result file name.
+#' @param range Integer array. The range of highlight region for analysis.\cr
+#'              Default range is \code{c(-20000, 20000)}.
+#' @param outPath String. Plots are saved in this path. \cr Default value is R home directory.
+#' @param outFileName Character. Attached ID to the result file name.
 #' 
 #' @return Return a result list that is made up of insertion and distribution result tables
 #'         and GenomicRange object of clinical variant data.
 #'         
 #' @examples
 #' data(blast_obj); data(var_exam_db)
-#' saveRDS(var_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_clinvar.rds'))
+#' saveRDS(var_exam_db,
+#'         paste0(system.file("extdata", package = 'RIPAT'),
+#'         '/GRCh37_clinvar.rds'))
 #'
-#' blast_clivar = annoByVar(hits = blast_obj, ran_hits = NULL, outFileName = 'blast_res')
+#' blast_clivar = annoByVar(hits = blast_obj, ran_hits = NULL,
+#'                          outFileName = 'blast_res')
 #' 
 #' @export
-annoByVar = function(hits, ran_hits = NULL, mapTool = 'blast', organism = 'GRCh37', interval = 5000, range = c(-20000, 20000), includeUndecided = FALSE, outPath = getwd(), outFileName = paste0('RIPAT', round(unclass(Sys.time())))){
+annoByVar = function(hits, ran_hits = NULL, mapTool = 'blast', organism = 'GRCh37', interval = 5000, range = c(-20000, 20000), outPath = getwd(), outFileName = paste0('RIPAT', round(unclass(Sys.time())))){
   message('----- Annotate integration sites. (Time : ', date(), ')')
   message('- Validate options')
   if(length(which(c('blast', 'blat') %in% mapTool)) == 0){stop("[ERROR] Please confirm the alignment tool name.\n----- This process is halted. (Time : ", date(), ")\n")}
@@ -125,22 +128,16 @@ annoByVar = function(hits, ran_hits = NULL, mapTool = 'blast', organism = 'GRCh3
   if(length(hits[[2]]) != 0){
     all_dist_dup = unlist(lapply(dist_dup, function(x){x$dist}))
   } else {all_dist_dup = NULL}
-  if(includeUndecided){
-    hist_obj = hist(c(all_dist_only, all_dist_dup), plot = FALSE, breaks = ranges)
-    inside_tab = data.frame(rbind(inside_tab_only, inside_tab_dup), stringsAsFactors = FALSE)
-    cl_dist = list('Decided' = dist_only, 'Undecided' = dist_dup)
-  } else {
-    hist_obj = hist(all_dist_only, plot = FALSE, breaks = ranges)
-    inside_tab = inside_tab_only
-    cl_dist = list('Decided' = dist_only)
-  }
+  hist_obj = hist(all_dist_only, plot = FALSE, breaks = ranges)
+  inside_tab = inside_tab_only
+  cl_dist = list('Decided' = dist_only)
   if(!is.null(ran_hits)){
     count_site = hist_obj$counts; count_site_ran = hist_obj_ran$counts
-    if(includeUndecided){count_all = sum(c(nrow(only_hits_tab), nrow(dup_hits_tab)))} else {count_all = nrow(only_hits_tab)}
+    count_all = nrow(only_hits_tab)
     count_data = data.frame('Range' = factor(rep(ranges[ranges != 0]/1000, 2), levels = ranges[ranges != 0]/1000), 'Group' = c(rep('Observed', length(count_site)), rep('Random', length(count_site_ran))), 'Count' = c(count_site, count_site_ran), 'Freq' = c(count_site/count_all, count_site_ran/randomSize))
   } else {
     count_site = hist_obj$counts;
-    if(includeUndecided){count_all = sum(c(nrow(only_hits_tab), nrow(dup_hits_tab)))} else {count_all = nrow(only_hits_tab)}
+    count_all = nrow(only_hits_tab)
     count_data = data.frame('Range' = factor(ranges[ranges != 0]/1000, levels = ranges[ranges != 0]/1000), 'Group' = rep('Observed', length(count_site)), 'Count' = count_site, 'Freq' = count_site/count_all)
   }
   grDevices::png(paste0(outPath, '/', outFileName, '_distribution_var_', organism, '.png'), width = 1200, height = 750)

@@ -4,39 +4,45 @@
 #' Annotate vector integration sites by repeat and microsatellite data.
 #' 
 #' @usage 
-#' annoByRepeat(hits, ran_hits = NULL, mapTool = 'blast',
-#'              organism = 'GRCh37', interval = 5000, range = c(-20000, 20000), 
-#'              includeUndecided = FALSE, outPath = getwd(),
+#' annoByRepeat(hits, ran_hits = NULL, 
+#'              mapTool = 'blast',
+#'              organism = 'GRCh37',
+#'              interval = 5000,
+#'              range = c(-20000, 20000),
+#'              outPath = getwd(),
 #'              outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 #' 
-#' @param hits a GR object. This object made by \code{makeInputObj} function.
-#' @param ran_hits a GR object or list. This object is output of \code{ranSetGenerator} function.
-#' @param mapTool a single character. Function serves two types of object
-#'                such as outputs from BLAST and BLAT.
+#' @param hits a GR object. This object made by \code{\link{makeInputObj}} function.
+#' @param hits GR object. This object made by \code{\link{makeExpSet}} function.
+#' @param ran_hits GR object or list. This object is output of \code{\link{makeRanSet}} function.
+#' @param mapTool Character. Function uses two types of object\cr from BLAST and BLAT.
 #'                Default is 'blast'. If you want to use BLAT result, use 'blat'.
-#' @param organism a single character. This function can run by two versions of organisms
+#' @param organism Character. This function can run by two versions of organisms\cr
 #'                 such as GRCh37, GRCh38 (Human). Default is 'GRCh37'.
-#' @param interval an integer vector. This number means interval number for
+#' @param interval Integer. This number means interval number\cr for
 #'                 distribution analysis. Default is 5000.
-#' @param range an integer array. The range of highlight region for analysis.
-#'              Default range is c(-20000, 20000).
-#' @param includeUndecided TRUE or FALSE. If user want to use undecided hits in analysis,
-#'                         enter TRUE. Default is FALSE.
-#' @param outPath an string vector. Plots are saved in this path. Default value is R home directory.
-#' @param outFileName a character vector. Attached ID to the result file name.
+#' @param range Integer array. The range of highlight region for analysis.\cr
+#'              Default range is \code{c(-20000, 20000)}.
+#' @param outPath String. Plots are saved in this path. \cr Default value is R home directory.
+#' @param outFileName Character. Attached ID to the result file name.
 #' 
 #' @return Return a result list that is made up of insertion and distribution result tables
 #'         and GenomicRange object of Rpeat and microsatellite data.
 #'         
 #' @examples 
 #' data(blast_obj); data(repeat_exam_db); data(micro_exam_db)
-#' saveRDS(repeat_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_repeat.rds'))
-#' saveRDS(micro_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_microsat.rds'))
+#' saveRDS(repeat_exam_db,
+#'         paste0(system.file("extdata", package = 'RIPAT'),
+#'         '/GRCh37_repeat.rds'))
+#' saveRDS(micro_exam_db,
+#'         paste0(system.file("extdata", package = 'RIPAT'),
+#'         '/GRCh37_microsat.rds'))
 #' 
-#' blast_repeat = annoByRepeat(hits = blast_obj, ran_hits = NULL, outFileName = 'blast_res')
+#' blast_repeat = annoByRepeat(hits = blast_obj, ran_hits = NULL,
+#'                             outFileName = 'blast_res')
 #' 
 #' @export
-annoByRepeat = function(hits, ran_hits = NULL, mapTool = 'blast', organism = 'GRCh37', interval = 5000, range = c(-20000, 20000), includeUndecided = FALSE, outPath = getwd(), outFileName = paste0('RIPAT', round(unclass(Sys.time())))){
+annoByRepeat = function(hits, ran_hits = NULL, mapTool = 'blast', organism = 'GRCh37', interval = 5000, range = c(-20000, 20000), outPath = getwd(), outFileName = paste0('RIPAT', round(unclass(Sys.time())))){
   message('----- Annotate integration sites. (Time : ', date(), ')')
   message('- Validate options')
   if(length(which(c('blast', 'blat') %in% mapTool)) == 0){stop("[ERROR] Please confirm the alignment tool name.\n----- This process is halted. (Time : ", date(), ")\n")}
@@ -172,29 +178,20 @@ annoByRepeat = function(hits, ran_hits = NULL, mapTool = 'blast', organism = 'GR
     all_dist_dup = unlist(lapply(dist_dup, function(x){x[[1]]$dist}))
     all_dist_m_dup = unlist(lapply(dist_dup, function(x){x[[2]]$dist}))
   } else {all_dist_dup = NULL; all_dist_t_dup = NULL}
-  if(includeUndecided){
-    hist_obj = hist(c(all_dist_only, all_dist_dup), plot = FALSE, breaks = ranges)
-    hist_obj_m = hist(c(all_dist_m_only, all_dist_dup_m), plot = FALSE, breaks = ranges)
-    inside_tab = data.frame(rbind(inside_tab_only, inside_tab_dup), stringsAsFactors = FALSE)
-    inside_tab_m = data.frame(rbind(inside_tab_only_m, inside_tab_dup_m), stringsAsFactors = FALSE)
-    r_dist = list('Decided' = lapply(dist_only, function(x){x[[1]]}), 'Undecided' = lapply(dist_dup, function(x){x[[1]]}))
-    m_dist = list('Decided' = lapply(dist_only, function(x){x[[2]]}), 'Undecided' = lapply(dist_dup, function(x){x[[2]]}))
-  } else {
-    hist_obj = hist(all_dist_only, plot = FALSE, breaks = ranges)
-    hist_obj_m = hist(all_dist_m_only, plot = FALSE, breaks = ranges)
-    inside_tab = inside_tab_only; inside_tab_m = inside_tab_only_m;
-    r_dist = list('Decided' = lapply(dist_only, function(x){x[[1]]}))
-    m_dist = list('Decided' = lapply(dist_only, function(x){x[[2]]}))
-  }
+  hist_obj = hist(all_dist_only, plot = FALSE, breaks = ranges)
+  hist_obj_m = hist(all_dist_m_only, plot = FALSE, breaks = ranges)
+  inside_tab = inside_tab_only; inside_tab_m = inside_tab_only_m;
+  r_dist = list('Decided' = lapply(dist_only, function(x){x[[1]]}))
+  m_dist = list('Decided' = lapply(dist_only, function(x){x[[2]]}))
   if(!is.null(ran_hits)){
     count_site = hist_obj$counts; count_site_ran = hist_obj_ran$counts
     count_m_site = hist_obj_m$counts; count_m_site_ran = hist_obj_m_ran$counts
-    if(includeUndecided){count_all = sum(c(nrow(only_hits_tab), nrow(dup_hits_tab)))} else {count_all = nrow(only_hits_tab)}
+    count_all = nrow(only_hits_tab)
     count_data = data.frame('Range' = factor(rep(ranges[ranges != 0]/1000, 2), levels = ranges[ranges != 0]/1000), 'Group' = c(rep('Observed', length(count_site)), rep('Random', length(count_site_ran))), 'Count' = c(count_site, count_site_ran), 'Freq' = c(count_site/count_all, count_site_ran/randomSize))
     count_m_data = data.frame('Range' = factor(rep(ranges[ranges != 0]/1000, 2), levels = ranges[ranges != 0]/1000), 'Group' = c(rep('Observed', length(count_m_site)), rep('Random', length(count_m_site_ran))), 'Count' = c(count_m_site, count_m_site_ran), 'Freq' = c(count_m_site/count_all, count_m_site_ran/randomSize))
   } else {
     count_site = hist_obj$counts; count_m_site = hist_obj_m$counts
-    if(includeUndecided){count_all = sum(c(nrow(only_hits_tab), nrow(dup_hits_tab)))} else {count_all = nrow(only_hits_tab)}
+    count_all = nrow(only_hits_tab)
     count_data = data.frame('Range' = factor(ranges[ranges != 0]/1000, levels = ranges[ranges != 0]/1000), 'Group' = rep('Observed', length(count_site)), 'Count' = count_site, 'Freq' = count_site/count_all)
     count_m_data = data.frame('Range' = factor(ranges[ranges != 0]/1000, levels = ranges[ranges != 0]/1000), 'Group' = rep('Observed', length(count_m_site)), 'Count' = count_m_site, 'Freq' = count_m_site/count_all)
   }
