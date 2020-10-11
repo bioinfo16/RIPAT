@@ -4,34 +4,35 @@
 \alias{makeDocument}
 \title{Make the result object and document.}
 \usage{
-makeDocument(res, dataType, excelOut = TRUE, 
-             includeUndecided = FALSE, outPath = getwd(),
+makeDocument(res, dataType,
+             excelOut = TRUE, 
+             outPath = getwd(),
              outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 }
 \arguments{
-\item{res}{a GR object. This object is output of \code{annoByGene, annoByCpG, annoByRepeat, annoByVar} function.}
+\item{res}{a GR object. This object is output of \code{\link{annoByGene, annoByCpG, annoByRepeat, annoByVar}} function.}
 
-\item{dataType}{a character vector. User enter the annotation type of input
+\item{dataType}{a character vector. User enter the annotation type of input\cr
 such as gene, cpg, repeat and variant.}
 
-\item{excelOut}{TRUE or FALSE. If user want to make excel file, enter TRUE.
+\item{excelOut}{TRUE or FALSE. If user want to make excel file, enter TRUE.\cr
 Default is TRUE.}
 
-\item{includeUndecided}{TRUE or FALSE. If user want to use undecided hits in analysis, enter TRUE.
-Default is FALSE.}
-
-\item{outPath}{an string vector. Plots are saved in this path. Default value is R home directory.}
+\item{outPath}{an string vector. Plots are saved in this path.\cr
+Default value is R home directory.}
 
 \item{outFileName}{a character vector. Attached ID to the result file name.}
 }
 \value{
-Make output table and excel files about vector integration sites and proportion test result.
+Make output table and excel files about vector integration sites\cr and proportion test result.
 }
 \description{
 Rearrange the result from annotation functions.
 }
 \examples{
 data(blast_gene)
-makeDocument(res = blast_gene, dataType = 'gene', outFileName = 'blast_gene_res')
+
+makeDocument(res = blast_gene, dataType = 'gene',
+             outFileName = 'blast_gene_res')
 
 }

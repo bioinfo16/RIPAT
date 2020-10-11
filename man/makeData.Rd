@@ -4,12 +4,14 @@
 \alias{makeData}
 \title{Make data files for RIPAT.}
 \usage{
-makeData(organism = 'GRCh37', dataType = 'gene')
+makeData(organism = 'GRCh37', dataType = 'cpg')
 }
 \arguments{
-\item{organism}{a single character. Two versions of organism such as GRCh37, GRCh38 (Human). Default is 'GRCh37'.}
+\item{organism}{a single character. Two versions of organism such as GRCh37, GRCh38 (Human).\cr
+Default is 'GRCh37'.}
 
-\item{dataType}{a single character. Data type what user needs (gene, cpg, repeat and variant). Default is 'gene'.}
+\item{dataType}{a single character. Data type what user needs (cpg, repeat and variant).\cr
+Default is 'cpg'.}
 }
 \description{
 Download datafiles for running RIPAT.

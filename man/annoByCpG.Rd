@@ -4,35 +4,34 @@
 \alias{annoByCpG}
 \title{Annotate integration sites by CpG sites.}
 \usage{
-annoByCpG(hits, ran_hits = NULL, mapTool = 'blast',
-          organism = 'GRCh37', interval = 5000, range = c(-20000, 20000), 
-          includeUndecided = FALSE, outPath = getwd(),
+annoByCpG(hits, ran_hits = NULL,
+          mapTool = 'blast',
+          organism = 'GRCh37',
+          interval = 5000,
+          range = c(-20000, 20000),
+          outPath = getwd(),
           outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 }
 \arguments{
-\item{hits}{a GR object. This object made by \code{makeInputObj} function.}
+\item{hits}{GR object. This object made by \code{\link{makeExpSet}} function.}
 
-\item{ran_hits}{a GR object or list. This object is output of \code{ranSetGenerator} function.}
+\item{ran_hits}{GR object or list. This object is output of \code{\link{makeRanSet}} function.}
 
-\item{mapTool}{a single character. Function serves two types of object
-such as outputs from BLAST and BLAT.
+\item{mapTool}{Character. Function uses two types of object\cr from BLAST and BLAT.
 Default is 'blast'. If you want to use BLAT result, use 'blat'.}
 
-\item{organism}{a single character. This function can run by two versions of organisms
+\item{organism}{Character. This function can run by two versions of organisms\cr
 such as GRCh37, GRCh38 (Human). Default is 'GRCh37'.}
 
-\item{interval}{an integer vector. This number means interval number for
+\item{interval}{Integer. This number means interval number\cr for
 distribution analysis. Default is 5000.}
 
-\item{range}{an integer array. The range of highlight region for analysis.
-Default range is c(-20000, 20000).}
+\item{range}{Integer array. The range of highlight region for analysis.\cr
+Default range is \code{c(-20000, 20000)}.}
 
-\item{includeUndecided}{TRUE or FALSE. If user want to use undecided hits in analysis,
-enter TRUE. Default is FALSE.}
+\item{outPath}{String. Plots are saved in this path. \cr Default value is R home directory.}
 
-\item{outPath}{an string vector. Plots are saved in this path. Default value is R home directory.}
-
-\item{outFileName}{a character vector. Attached ID to the result file name.}
+\item{outFileName}{Character. Attached ID to the result file name.}
 }
 \value{
 Return a result list that is made up of insertion and distribution result tables
@@ -43,8 +42,11 @@ Annotate vector integration sites by CpG site data.
 }
 \examples{
 data(blast_obj); data(cpg_exam_db)
-saveRDS(cpg_exam_db, paste0(system.file("extdata", package = 'RIPAT'), '/GRCh37_cpg.rds'))
+saveRDS(cpg_exam_db, 
+        paste0(system.file("extdata", package = 'RIPAT'),
+                            '/GRCh37_cpg.rds'))
 
-blast_cpg = annoByCpG(hits = blast_obj, ran_hits = NULL, outFileName = 'blast_res')
+blast_cpg = annoByCpG(hits = blast_obj, ran_hits = NULL,
+                      outFileName = 'blast_res')
            
 }

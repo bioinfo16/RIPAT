@@ -60,17 +60,9 @@ annoByVar = function(hits, ran_hits = NULL, mapTool = 'blast', organism = 'GRCh3
   inside_clin_only = as.data.frame(GenomicRanges::findOverlaps(hits[[1]], gr_clin, type = 'any', ignore.strand = TRUE), stringsAsFactors = FALSE)
   only_res_que = data.frame(hits[[1]][inside_clin_only$queryHits,], stringsAsFactors = FALSE)[,c(1:3,6:8)]
   only_res_sub = dataTable[inside_clin_only$subjectHits,]
-  inside_tab_only = unique(cbind(only_res_que, only_res_sub)[,c(4, 1:3, 7:17)])
+  inside_tab = unique(cbind(only_res_que, only_res_sub)[,c(4, 1:3, 7:17)])
   colnames(only_res_que) = c('IR_chr', 'IR_start', 'IR_end', 'IR_ID', 'IR_identity', 'IR_align_length')
-  names(inside_tab_only) = c('q_name', 'q_chr', 'q_start', 'q_end', 'chr', 'start', 'end', 'type', 'name', 'symbol', 'phenotypeList', 'origin', 'clinicalSignificance', 'reviewstatus', 'numberSubmitters')
-  if(length(hits[[2]]) != 0){
-    inside_clin_dup = as.data.frame(GenomicRanges::findOverlaps(hits[[2]], gr_clin, type = 'any', ignore.strand = TRUE), stringsAsFactors = FALSE)
-    dup_res_que = data.frame(hits[[2]][inside_clin_dup$queryHits,], stringsAsFactors = FALSE)[,c(1:3,6:8)]
-    dup_res_sub = dataTable[inside_clin_dup$subjectHits,]
-    inside_tab_dup = unique(cbind(dup_res_que, dup_res_sub)[,c(4, 1:3, 7:17)])
-    colnames(dup_res_que) = c('IR_chr', 'IR_start', 'IR_end', 'IR_ID', 'IR_identity', 'IR_align_length')
-    names(inside_tab_dup) = c('q_name', 'q_chr', 'q_start', 'q_end', 'chr', 'start', 'end', 'type', 'name', 'symbol', 'phenotypeList', 'origin', 'clinicalSignificance', 'reviewstatus', 'numberSubmitters')
-  } else {inside_tab_dup = NULL}
+  names(inside_tab) = c('q_name', 'q_chr', 'q_start', 'q_end', 'chr', 'start', 'end', 'type', 'name', 'symbol', 'phenotypeList', 'origin', 'clinicalSignificance', 'reviewstatus', 'numberSubmitters')
   message('- OK!')
   message('- Calculate distance.')
   only_hits_tab = data.frame(hits[[1]], stringsAsFactors = FALSE)
@@ -85,20 +77,6 @@ annoByVar = function(hits, ran_hits = NULL, mapTool = 'blast', organism = 'GRCh3
     return(dat)
   })
   hist_only_v = hist(unlist(lapply(dist_only, function(x){x$dist/1000})), breaks = ranges/1000, plot = FALSE)
-  if(length(hits[[2]]) != 0){
-    dup_hits_tab = data.frame(hits[[2]], stringsAsFactors = FALSE)
-    dist_dup = lapply(c(1:nrow(dup_hits_tab)), function(a){
-      x = dup_hits_tab$start[a]; y = dup_hits_tab$query[a]; z = dup_hits_tab$seqnames[a]
-      cal1 = dataTable$start-x; cal2 = dataTable$end-x
-      cal1_i = intersect(which(cal1 <= abs(range[1])), which(cal1 > 0)); cal2_i = intersect(which(abs(cal2) <= range[2]), which(cal2 < 0))
-      dat = data.frame(dataTable[c(cal1_i, cal2_i),], dist = -c(cal1[cal1_i], cal2[cal2_i]))
-      dat = unique(data.frame('query' = rep(y, nrow(dat)), dat))
-      dat = dat[which(dat$chr == z),]
-      dat = dat[order(abs(dat$dist), decreasing = FALSE),][1,]
-      return(dat)
-    })
-    hist_dup_v = hist(unlist(lapply(dist_dup, function(x){x$dist/1000})), breaks = ranges/1000, plot = FALSE)
-  }
   message('- OK!')
   if(!is.null(ran_hits)){
     message('- Do random set analysis.')
@@ -125,11 +103,7 @@ annoByVar = function(hits, ran_hits = NULL, mapTool = 'blast', organism = 'GRCh3
   } else {message('[WARN] Skip random set analysis.')}
   message('- Draw histograms.')
   all_dist_only = unlist(lapply(dist_only, function(x){x$dist}))
-  if(length(hits[[2]]) != 0){
-    all_dist_dup = unlist(lapply(dist_dup, function(x){x$dist}))
-  } else {all_dist_dup = NULL}
   hist_obj = hist(all_dist_only, plot = FALSE, breaks = ranges)
-  inside_tab = inside_tab_only
   cl_dist = list('Decided' = dist_only)
   if(!is.null(ran_hits)){
     count_site = hist_obj$counts; count_site_ran = hist_obj_ran$counts

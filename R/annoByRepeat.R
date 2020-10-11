@@ -71,22 +71,10 @@ annoByRepeat = function(hits, ran_hits = NULL, mapTool = 'blast', organism = 'GR
   only_res_sub = dataTable[inside_repeat_only$subjectHits,]
   only_res_que_m = data.frame(hits[[1]][inside_micro_only$queryHits,], stringsAsFactors = FALSE)[,c(1:3,6:8)]
   only_res_sub_m = dataTable_micro[inside_micro_only$subjectHits,]
-  inside_tab_only = unique(cbind(only_res_que, only_res_sub)[,c(4,1:3,5,6,11,7:10,12,13)])
-  inside_tab_only_m = unique(cbind(only_res_que_m, only_res_sub_m)[,c(4,1:3,5,6,7:10)])
-  names(inside_tab_only) = c('q_name', 'q_chr', 'q_start', 'q_end', 'identity', 'align_length', 'rep_name', 'chr', 'start', 'end', 'strand', 'repClass', 'repFamily')
-  names(inside_tab_only_m) = c('q_name', 'q_chr', 'q_start', 'q_end', 'identity', 'align_length', 'chr', 'start', 'end', 'microName')
-  if(length(hits[[2]]) != 0){
-    inside_repeat_dup = as.data.frame(GenomicRanges::findOverlaps(hits[[2]], gr_repeat, type = 'any', ignore.strand = TRUE), stringsAsFactors = FALSE)
-    inside_micro_dup = as.data.frame(GenomicRanges::findOverlaps(hits[[2]], gr_micro, type = 'any', ignore.strand = TRUE), stringsAsFactors = FALSE)
-    dup_res_que = data.frame(hits[[2]][inside_repeat_dup$queryHits,], stringsAsFactors = FALSE)[,c(1:3,6:8)]
-    dup_res_sub = dataTable[inside_repeat_dup$subjectHits,]
-    dup_res_que_m = data.frame(hits[[2]][inside_micro_dup$queryHits,], stringsAsFactors = FALSE)[,c(1:3,6:8)]
-    dup_res_sub_m = dataTable_micro[inside_micro_dup$subjectHits,]
-    inside_tab_dup = unique(cbind(dup_res_que, dup_res_sub)[,c(4,1:3,5,6,11,7:10,12:13)])
-    inside_tab_dup_m = unique(cbind(dup_res_que_m, dup_res_sub_m)[,c(4,1:3,5,6,11,7:10,12,13)])
-    names(inside_tab_dup) = c('q_name', 'q_chr', 'q_start', 'q_end', 'identity', 'align_length', 'rep_name', 'chr', 'start', 'end', 'strand', 'repClass', 'repFamily')
-    names(inside_tab_dup_m) = c('q_name', 'q_chr', 'q_start', 'q_end', 'identity', 'align_length', 'chr', 'start', 'end', 'microName')
-  } else {inside_tab_dup = NULL}
+  inside_tab = unique(cbind(only_res_que, only_res_sub)[,c(4,1:3,5,6,11,7:10,12,13)])
+  inside_tab_m = unique(cbind(only_res_que_m, only_res_sub_m)[,c(4,1:3,5,6,7:10)])
+  names(inside_tab) = c('q_name', 'q_chr', 'q_start', 'q_end', 'identity', 'align_length', 'rep_name', 'chr', 'start', 'end', 'strand', 'repClass', 'repFamily')
+  names(inside_tab_m) = c('q_name', 'q_chr', 'q_start', 'q_end', 'identity', 'align_length', 'chr', 'start', 'end', 'microName')
   message('- OK!')
   message('- Calculate distance.')
   strp = dataTable[which(dataTable$strand == '+'),]; strn = dataTable[which(dataTable$strand == '-'),]
@@ -111,29 +99,6 @@ annoByRepeat = function(hits, ran_hits = NULL, mapTool = 'blast', organism = 'GR
   })
   hist_only_r = hist(unlist(lapply(dist_only, function(x){x[[1]]$dist/1000})), breaks = ranges/1000, plot = FALSE)
   hist_only_m = hist(unlist(lapply(dist_only, function(x){x[[2]]$dist/1000})), breaks = ranges/1000, plot = FALSE)
-  if(length(hits[[2]]) != 0){
-    dup_hits_tab = data.frame(hits[[2]], stringsAsFactors = FALSE)
-    dist_dup = lapply(c(1:nrow(dup_hits_tab)), function(a){
-      x = dup_hits_tab$start[a]; y = dup_hits_tab$query[a]; z = as.character(dup_hits_tab$seqnames)[a]
-      cal1p = strp$start-x; cal2p = strp$end-x; cal1n = strn$end-x; cal2n = strn$start-x
-      cal1_ip = intersect(which(cal1p <= abs(range[1])), which(cal1p > 0)); cal2_ip = intersect(which(abs(cal2p) <= range[2]), which(cal2p < 0))
-      cal1_in = intersect(which(cal1n >= range[1]), which(cal1n < 0)); cal2_in = intersect(which(cal2n <= range[2]), which(cal2n > 0))
-      dat = data.frame(rbind(strp[c(cal1_ip, cal2_ip),], strn[c(cal1_in, cal2_in),]), dist = c(-c(cal1p[cal1_ip], cal2p[cal2_ip]), cal1n[cal1_in], cal2n[cal2_in]))
-      dat = unique(data.frame('query' = rep(y, nrow(dat)), dat))
-      dat = dat[which(dat$chr == z),]
-      dat = dat[order(abs(dat$dist), decreasing = FALSE),][1,]
-      cal1m = dataTable_micro$start-x; cal2m = dataTable_micro$end-x
-      cal1_im = intersect(which(cal1m <= abs(range[1])), which(cal1m > 0))
-      cal2_im = intersect(which(abs(cal2m) <= range[2]), which(cal2m < 0))
-      dat_m = data.frame(dataTable_micro[c(cal1_im, cal2_im),], dist = -c(cal1m[cal1_im], cal2m[cal2_im]))
-      dat_m = unique(data.frame('query' = rep(y, nrow(dat_m)), dat_m))
-      dat_m = dat_m[which(dat_m$chr == z),]
-      dat_m = dat_m[order(abs(dat_m$dist), decreasing = FALSE),][1,]
-      return(list(dat, dat_m))
-    })
-    hist_dup_r = hist(unlist(lapply(dist_dup, function(x){x[[1]]$dist/1000})), breaks = ranges/1000, plot = FALSE)
-    hist_dup_m = hist(unlist(lapply(dist_dup, function(x){x[[2]]$dist/1000})), breaks = ranges/1000, plot = FALSE)
-  }
   message('- OK!')
   if(!is.null(ran_hits)){
     message('- Do random set analysis.')
@@ -174,13 +139,8 @@ annoByRepeat = function(hits, ran_hits = NULL, mapTool = 'blast', organism = 'GR
   message('- Draw histograms.')
   all_dist_only = unlist(lapply(dist_only, function(x){x[[1]]$dist}))
   all_dist_m_only = unlist(lapply(dist_only, function(x){x[[2]]$dist}))
-  if(length(hits[[2]]) != 0){
-    all_dist_dup = unlist(lapply(dist_dup, function(x){x[[1]]$dist}))
-    all_dist_m_dup = unlist(lapply(dist_dup, function(x){x[[2]]$dist}))
-  } else {all_dist_dup = NULL; all_dist_t_dup = NULL}
   hist_obj = hist(all_dist_only, plot = FALSE, breaks = ranges)
   hist_obj_m = hist(all_dist_m_only, plot = FALSE, breaks = ranges)
-  inside_tab = inside_tab_only; inside_tab_m = inside_tab_only_m;
   r_dist = list('Decided' = lapply(dist_only, function(x){x[[1]]}))
   m_dist = list('Decided' = lapply(dist_only, function(x){x[[2]]}))
   if(!is.null(ran_hits)){

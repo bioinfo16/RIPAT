@@ -4,20 +4,18 @@
 \alias{drawingKaryo}
 \title{Draw the karyogram plot.}
 \usage{
-drawingKaryo(hits, feature, organism = 'GRCh37',
-             includeUndecided = FALSE, outPath = getwd(), 
+drawingKaryo(hits, feature,
+             organism = 'GRCh37',
+             outPath = getwd(), 
              outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 }
 \arguments{
-\item{hits}{a GR object. This object made from \code{makeInputObj} function.}
+\item{hits}{a GR object. This object made from \code{\link{makeExpSet}} function.}
 
 \item{feature}{a GR object. This object made from annotation function.}
 
-\item{organism}{a character vector. This function serves 2 versions of organisms
-such as GRCh37, GRCh38 (Human). Default is 'GRCh37'.}
-
-\item{includeUndecided}{TRUE or FALSE. If user want to use undecided hits in analysis,
-enter TRUE. Default is FALSE.}
+\item{organism}{a character vector. This function serves 2 versions of organisms\cr
+such as GRCh37, GRCh38. Default is 'GRCh37'.}
 
 \item{outPath}{a string vector. Type path to save a plot.}
 
@@ -30,8 +28,7 @@ Return the ideogram plot and object.
 Draw a karyogram plot and show integration site.
 }
 \examples{
-data(blast_obj)
-data(blast_gene)
+data(blast_obj); data(blast_gene)
 drawingKaryo(hits = blast_obj, feature = blast_gene$Gene_data, outFileName = 'blast_res')
 
 }

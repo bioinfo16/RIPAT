@@ -4,28 +4,30 @@
 #' Rearrange the result from annotation functions.
 #' 
 #' @usage 
-#' makeDocument(res, dataType, excelOut = TRUE, 
-#'              includeUndecided = FALSE, outPath = getwd(),
+#' makeDocument(res, dataType,
+#'              excelOut = TRUE, 
+#'              outPath = getwd(),
 #'              outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 #' 
-#' @param res a GR object. This object is output of \code{annoByGene, annoByCpG, annoByRepeat, annoByVar} function.
-#' @param dataType a character vector. User enter the annotation type of input
+#' @param res a GR object. This object is output of \code{\link{annoByGene, annoByCpG, annoByRepeat, annoByVar}} function.
+#' @param dataType a character vector. User enter the annotation type of input\cr
 #'                 such as gene, cpg, repeat and variant.
-#' @param excelOut TRUE or FALSE. If user want to make excel file, enter TRUE.
+#' @param excelOut TRUE or FALSE. If user want to make excel file, enter TRUE.\cr
 #'                 Default is TRUE.
-#' @param includeUndecided TRUE or FALSE. If user want to use undecided hits in analysis, enter TRUE.
-#'                         Default is FALSE.
-#' @param outPath an string vector. Plots are saved in this path. Default value is R home directory.
+#' @param outPath an string vector. Plots are saved in this path.\cr
+#'                Default value is R home directory.
 #' @param outFileName a character vector. Attached ID to the result file name.
 #' 
-#' @return Make output table and excel files about vector integration sites and proportion test result.
+#' @return Make output table and excel files about vector integration sites\cr and proportion test result.
 #' 
 #' @examples 
 #' data(blast_gene)
-#' makeDocument(res = blast_gene, dataType = 'gene', outFileName = 'blast_gene_res')
+#' 
+#' makeDocument(res = blast_gene, dataType = 'gene',
+#'              outFileName = 'blast_gene_res')
 #'
 #' @export
-makeDocument = function(res, dataType ='gene', excelOut = TRUE, includeUndecided = FALSE, outPath = getwd(), outFileName = paste0('RIPAT', round(unclass(Sys.time())))){
+makeDocument = function(res, dataType ='gene', excelOut = TRUE, outPath = getwd(), outFileName = paste0('RIPAT', round(unclass(Sys.time())))){
   if(!is.null(res)){
     message('----- Make result documents. (Time : ', date(), ')')
     message('- Validate options')
@@ -53,17 +55,6 @@ makeDocument = function(res, dataType ='gene', excelOut = TRUE, includeUndecided
       type_tab2 = lapply(exp_types2, function(a){subset(dist_tab2, dist_tab2$gene_type == a)})
       names(type_tab1) = exp_types; names(type_tab2) = exp_types2
     }
-    if(includeUndecided){
-      inside_u_tab = data.frame(do.call('rbind', res[[1]]$Undecided), stringsAsFactors = FALSE)
-      dist_u_tab = data.frame(do.call('rbind', res[[2]]$Undecided), stringsAsFactors = FALSE)
-      if(dataType == 'repeat'){
-        inside_u_tab2 = data.frame(do.call('rbind', res[[5]]$Undecided), stringsAsFactors = FALSE)
-        dist_u_tab2 = data.frame(do.call('rbind', res[[6]]$Undecided), stringsAsFactors = FALSE)
-        dist_u_tab2 = dist_u_tab2[-which(is.na(dist_u_tab2$query)),]
-      } else if(dataType == 'gene'){
-        dist_u_tab2 = data.frame(do.call('rbind', res[[5]]$Undecided), stringsAsFactors = FALSE)
-        dist_u_tab2 = dist_u_tab2[-which(is.na(dist_u_tab2$query)),]
-      }}
     message('- Edit random data')
     if(length(which(names(res) == 'Random_distribution')) != 0){
       if(dataType == 'repeat'){
