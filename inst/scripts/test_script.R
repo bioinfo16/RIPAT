@@ -5,9 +5,9 @@ input_dir = "[Input_directory]"
 input_file = "[Input_file_name]"
 input_file_id = "[Input_file_ID]"
 output_dir = "[Output_directory]"
-output_file_name = '[Used_in_processes_except_for_annotation]'
-random_output_file_name = "[Result_with_random_analysis]"
-norandom_output_file_name = "[Result_without_random_analysis]"
+output_file_name = '[Output_file_name]'
+random_output_file_name = "[Result_name_by_random_analysis]"
+norandom_output_file_name = "[Result_name_except_random_analysis]"
 
 ##### 00. Make data files - Do it once at the first time of running RIPAT.
 makeData(organism = 'GRCh37') # Download CpG, repeat and pathogenic variant data
