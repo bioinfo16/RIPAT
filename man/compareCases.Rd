@@ -4,29 +4,33 @@
 \alias{compareCases}
 \title{Annotate integration sites by genes and TSSs.}
 \usage{
-annoByGene(res1, res2,
-           outPath = getwd(),
-           outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
+compareCases(res_list, excelOut = TRUE,
+             outPath = getwd(),
+             outFileName = paste0('RIPAT', round(unclass(Sys.time()))))
 }
 \arguments{
-\item{res1}{GR object. This object made by \code{\link{makeExpSet}} function.}
+\item{res_list}{List. This is the list of result made by \code{\link{annoByGene}}, \code{\link{annoByCpG}},
+\code{\link{annoByRepeat}}, \code{\link{annoByVar}} and \code{\link{annoByCGC}} function.}
 
-\item{res2}{GR object or list. This object is output of \code{\link{makeRanSet}} function.}
+\item{excelOut}{TRUE or FALSE. If user want to make excel file, enter TRUE.\cr
+Default is TRUE.}
 
-\item{outPath}{String. Plots are saved in this path. \cr Default value is R home directory.}
+\item{outPath}{String. Outputs are saved in this path. \cr Default value is R home directory.}
 
 \item{outFileName}{Character. Attached ID to the result file name.}
 }
 \value{
-Return a result list that is made up of insertion and distribution result tables\cr and GenomicRange object of Gene and TSS data.
+Return a result list that is made up of distribution plot and table.
 }
 \description{
 Annotate vector integration sites by gene data.
 }
 \examples{
-data(blast_res); data(blast_res2)
+data(blast_gene)
+in_list = list(blast_gene, blast_gene)
 
-blast_gene = compareCases(res1 = blast_res, res2 = blast_res2,
-                          outFileName = 'blast_res')
+comp_res = compareCases(res_list = in_list,
+                        excelOut = FALSE,
+                        outFileName = 'comp_res')
 
 }

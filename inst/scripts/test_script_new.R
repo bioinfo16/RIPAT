@@ -3,10 +3,13 @@ library(RIPAT)
 
 input_dir = "D:/SMWU/200927/TEST"
 input_file = 'A5_15856M_quickmap.txt'
+input_file2 = 'I59_15943M_quickmap.txt'
 input_file_id = 'A5'
 output_dir = input_dir
 output_file_name = 'A5_TEST'
+output_file_name2 = 'I59_TEST'
 random_output_file_name = 'A5_TEST_RANDOM'
+random_output_file_name2 = 'I59_TEST_RANDOM'
 norandom_output_file_name = "A5_TEST_NORANDOM"
 
 ##### 00. Make data files - Do it once at the first time of running RIPAT.
@@ -20,6 +23,12 @@ blat_obj = makeExpSet(inFile = paste0(input_dir, '/', input_file),
                       vectorPos = 'front',
                       outPath = output_dir,
                       outFileName = output_file_name)
+blat_obj2 = makeExpSet(inFile = paste0(input_dir, '/', input_file2),
+                       mapTool = 'blast', 
+                       vectorPos = 'front',
+                       outPath = output_dir,
+                       outFileName = output_file_name)
+
 # Several files
 blat_obj2 = makeInputObj2(inDir = input_dir,
                           id = 'A5',
@@ -29,9 +38,9 @@ blat_obj2 = makeInputObj2(inDir = input_dir,
                           outFileName = paste0(output_file_name, '_multiple'))
 ### Random data
 ran_obj = makeRanSet(organism = 'GRCh37',
-                     randomSize = 10000,
+                     randomSize = 5000,
                      outPath = output_dir,
-                     outFileName = output_file_name)
+                     outFileName = 'ran5000')
 
 ##### 02. Integration frequency of each chromosome
 # Single input
@@ -53,6 +62,16 @@ blat_gene_random = annoByGene(hits = blat_obj,
                               outPath = output_dir,
                               outFileName = random_output_file_name)
 
+blat_gene_random2 = annoByGene(hits = blat_obj2,
+                              ran_hits = ran_obj,
+                              mapTool = 'blast',
+                              organism = 'GRCh37', 
+                              interval = 1000,
+                              range = c(-5000, 5000),
+                              outPath = output_dir,
+                              outFileName = random_output_file_name2)
+
+
 blat_gene_norandom = annoByGene(hits = blat_obj,
                                 mapTool = 'blast',
                                 organism = 'GRCh37',
@@ -64,11 +83,20 @@ blat_gene_norandom = annoByGene(hits = blat_obj,
 ##### 04. CpG
 blat_cpg_random = annoByCpG(hits = blat_obj,
                             ran_hits = ran_obj,
+                            mapTool = 'blast',
                             organism = 'GRCh37',
                             interval = 1000,
                             range = c(-5000, 5000),
                             outPath = output_dir,
                             outFileName = random_output_file_name)
+blat_cpg_random2 = annoByCpG(hits = blat_obj2,
+                             ran_hits = ran_obj,
+                             mapTool = 'blast',
+                             organism = 'GRCh37', 
+                             interval = 1000,
+                             range = c(-5000, 5000),
+                             outPath = output_dir,
+                             outFileName = random_output_file_name2)
 
 blat_cpg_norandom = annoByCpG(hits = blat_obj,
                               organism = 'GRCh37',
