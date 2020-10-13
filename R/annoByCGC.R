@@ -114,9 +114,9 @@ annoByCGC = function(hits, ran_hits = NULL, mapTool = 'blast', organism = 'GRCh3
     count_all = nrow(only_hits_tab)
     count_data = data.frame('Range' = factor(ranges[ranges != 0]/1000, levels = ranges[ranges != 0]/1000), 'Group' = rep('Observed', length(count_site)), 'Count' = count_site, 'Freq' = count_site/count_all)
   }
-  grDevices::png(paste0(outPath, '/', outFileName, '_distribution_gene_', organism, '.png'), width = 1200, height = 750)
+  grDevices::png(paste0(outPath, '/', outFileName, '_distribution_cgene_', organism, '.png'), width = 1200, height = 750)
   g_plot = ggplot2::ggplot(count_data) + ggplot2::geom_bar(ggplot2::aes(x = Range, y = Freq, fill = Group), stat = "identity", position = "dodge", width = 0.5) +
-    ggplot2::lims(y = c(0, max(count_data$Freq)*1.5)) + ggplot2::ggtitle(label = "Random distribution (Gene)") +
+    ggplot2::lims(y = c(0, max(count_data$Freq)*1.5)) + ggplot2::ggtitle(label = "Random distribution (Cancer gene)") +
     ggplot2::xlab('Intervals (Kbs)') + ggplot2::ylab("Ratio of Integration Events") + ggplot2::scale_fill_manual(values = c('mediumspringgreen', 'mediumpurple')) +
     ggplot2::theme(panel.background = ggplot2::element_rect(fill="white", colour = "white"), panel.grid.major = ggplot2::element_line(size = 0.5, linetype = 'dotted', colour = 'black'),
                    axis.line = ggplot2::element_line(colour = "darkgrey"), legend.title = ggplot2::element_blank(), 
