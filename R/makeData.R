@@ -26,7 +26,7 @@ makeData = function(organism = 'GRCh37', dataType = 'cpg'){
   cat('+ The data file path : ', outPath, '\n')
   if(organism == 'GRCh37'){otherkey = 'hg19'}else if(organism == 'GRCh38'){otherkey = 'hg38'}
   if(length(which(dataType == c('cpg', 'repeat'))) != 0){
-    message('- Load UCSC data (Repeat, Microsatellite, CpG island)')
+    message('- Load UCSC data')
     UCSCSession = rtracklayer::browserSession("UCSC")
     rtracklayer::genome(UCSCSession) <- otherkey
     chr_info = readRDS(file = system.file("extdata", paste0(organism, '_chrom.rds'), package = 'RIPAT'))

@@ -102,9 +102,9 @@ annoByCGC = function(hits, ran_hits = NULL, mapTool = 'blast', organism = 'GRCh3
     message('- OK!')
   } else {message('[WARN] Skip random set analysis.')}
   message('- Draw histograms.')
-  all_dist_only = unlist(lapply(dist_only, function(x){x[[1]]$dist}))
+  all_dist_only = unlist(lapply(dist_only, function(x){x$dist}))
   hist_obj = hist(all_dist_only, plot = FALSE, breaks = ranges)
-  g_dist = list('Decided' = lapply(dist_only, function(x){x[[1]]}))
+  g_dist = list('Decided' = dist_only)
   if(!is.null(ran_hits)){
     count_site = hist_obj$counts; count_site_ran = hist_obj_ran$counts
     count_all = nrow(only_hits_tab)

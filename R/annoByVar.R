@@ -87,7 +87,7 @@ annoByVar = function(hits, ran_hits = NULL, mapTool = 'blast', organism = 'GRCh3
     b = dataTable[inside_cl_ran$subjectHits,]
     inside_ran_tab = unique(cbind(a,b)[,c(1:3, 4:14)])
     names(inside_ran_tab) = c('q_chr', 'q_start', 'q_end', 'chr', 'start', 'end', 'type', 'name', 'symbol', 'phenotypeList', 'origin', 'clinicalSignificance', 'reviewstatus', 'numberSubmitters')
-    cl_dist_ran = lapply(c(1:nrow(ran_tab)), function(a){
+    cl_dist_ran = lapply(c(1:nrow(random_set)), function(a){
       x = as.numeric(random_set$Random_pos[a]); y = random_set$Random[a]; z = random_set$Random_chr[a]
       cal1 = dataTable$start-x; cal2 = dataTable$end-x
       cal1_i = intersect(which(cal1 <= abs(range[1])), which(cal1 > 0)); cal2_i = intersect(which(abs(cal2) <= range[2]), which(cal2 < 0))
